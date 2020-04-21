@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, Body, Right, Switch, CheckBox,
-   Textarea, View  } from 'native-base';
-import { Dialog, DialogContent, DialogButton, DialogTitle } from 'react-native-dialog-component'
+   Textarea, View,Fab  } from 'native-base';
+import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
 import RNPickerSelect from 'react-native-picker-select';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
 
 class ReminderList extends Component {
     state={
@@ -59,7 +61,6 @@ onChangeCategory = (event) => {
   render() {
       let {itemList, category} = this.state;
     return (
-      <View>
         <Container style = {{backgroundColor :'#1B2732'}}>
           <Content>
             <List>
@@ -82,17 +83,31 @@ onChangeCategory = (event) => {
               }
             </List>
           </Content>
-              <Button onClick = {()=>this.setState({open:true})}>
+              {/* <Button onClick = {()=>this.setState({open:true})}>
                 <Icon name='add-circle-outline'></Icon>
-              </Button>
-        </Container>
-
-        <Dialog open={this.state.open} onClose={this.handleClose}  aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Reminder</DialogTitle>
-            <DialogContent>
-              <Text>
-                Add New Reminder
-              </Text>
+              </Button> */}
+        <View style={{ flex: 1 }}>
+          <Fab
+            containerStyle={{ }}
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight"
+            onPress={() => this.dialogComponent.show()}>
+            <MaterialIcons name='add' />
+          </Fab>
+        </View>
+        <DialogComponent
+          ref={(dialogComponent) => { this.dialogComponent = dialogComponent; }}
+        >
+          <View>
+            <Text>
+              Add New Reminder
+            </Text>
+            <Textarea rowSpan={5} bordered placeholder="Textarea" onChange = {(event) => this.onChangeReminder(event)}/>
+          </View>
+          <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
+          <DialogButton text = 'Save' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
+        </DialogComponent>
+              
               
               {/* <Textarea
                 autoFocus
@@ -103,9 +118,9 @@ onChangeCategory = (event) => {
                 type="text"
                 fullWidth
               /> */}
-              <Textarea rowSpan={1} bordered placeholder="Textarea" onChange = {(event) => this.onChangeReminder(event)}/>
               
-              <RNPickerSelect
+              
+              {/* <RNPickerSelect
                   onValueChange={(event) => this.onChangeCategory(event)}
                   required
                   id="category"
@@ -124,22 +139,11 @@ onChangeCategory = (event) => {
                       { label: 'Football', value: 'football' },
                       { label: 'Baseball', value: 'baseball' },
                       { label: 'Hockey', value: 'hockey' },
-                  ]}
-              />
-              <List
-                 >
-                
-              </List>
+                  ]} */}
+              {/* /> */}
+        </Container>
 
-            </DialogContent>
-          <Button onClick={this.handleClose} color="primary">
-            <Text>Cancel</Text>
-          </Button>
-          <Button color="primary">
-            <Text>Save</Text>
-          </Button>
-        </Dialog>
-      </View>
+        
     );
   }
 }

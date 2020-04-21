@@ -22,7 +22,7 @@ class MainTabNavigator extends Component{
                     let iconName;
         
                     if (route.name === 'Reminder') {
-                      iconName = 'mdi-reminder'
+                      iconName = 'reminder'
                     } else if (route.name === 'Calendar') {
                       iconName = focused ? 'calendar-month' : 'calendar-month-outline';
                     } else if (route.name === 'Settings') {

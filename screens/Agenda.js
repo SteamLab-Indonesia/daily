@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 
-const testIDs = require('../testIDs');
-
-
 export default class AgendaScreen extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +15,6 @@ export default class AgendaScreen extends Component {
   render() {
     return (
       <Agenda
-        testID={testIDs.agenda.CONTAINER}
         items={this.state.items}
         loadItemsForMonth={this.loadItems.bind(this)}
         selected={new Date()}
@@ -89,7 +85,6 @@ export default class AgendaScreen extends Component {
   renderItem(item) {
     return (
       <TouchableOpacity
-        testID={testIDs.agenda.ITEM}
         style={[styles.item, {height: item.height}]} 
         onPress={() => Alert.alert(item.name)}
       >
