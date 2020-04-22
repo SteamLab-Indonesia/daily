@@ -1,22 +1,29 @@
 import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Agenda} from 'react-native-calendars';
+import {getReminder} from '../libs/database'
 
 export default class AgendaScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      items: {}
+      reminder: {}
     };
+  }
+
+  componentDidMount = () =>{
+    getReminder().then((data) => {
+      console.log(data)
+        this.setState({reminder:data})
+    })
   }
   
 
   render() {
     return (
       <Agenda
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems.bind(this)}
+        items={this.state.reminder}
         selected={new Date()}
         renderItem={this.renderItem.bind(this)}
         renderEmptyDate={this.renderEmptyDate.bind(this)}
@@ -53,33 +60,6 @@ export default class AgendaScreen extends Component {
         }}
       />
     );
-  }
-
-  loadItems(day) {
-    setTimeout(() => {
-
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 3 + 1);
-
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
-        }
-      }
-    //   const newItems = {};
-    //   Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-    //   this.setState({
-    //     items: newItems
-    //   });
-    });
   }
 
   renderItem(item) {
