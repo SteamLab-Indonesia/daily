@@ -1,6 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 import { format } from "date-fns";
 
+const reminderCollection = firestore().collection('reminder');
+const usersCollection = firestore().collection('Users');
+
 export function timeToString(time) {
     const date = new Date(time);
     return format(date, "dd-MM-yyyy");
@@ -8,7 +11,7 @@ export function timeToString(time) {
 
 export function getReminder(){
 	return new Promise((resolve,reject)=>{
-		firestore().collection('reminder').get()
+		reminderCollection.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
@@ -32,10 +35,6 @@ export function getReminder(){
         .catch((err) => reject(err));
   })
 }
-
-const reminderCollection = firestore().collection('reminder');
-const usersCollection = firestore().collection('Users');
-
 
 export function login(username, password) {
 
