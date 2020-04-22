@@ -11,7 +11,7 @@ export function timeToString(time) {
 
 export function reminderDate(time) {
 	const date = new Date(time);
-    return format(date, "E..EEE, yyyy-MM-dd");
+    return format(date, "eee, yyyy MMM dd");
 }
 
 export function getReminder(){
