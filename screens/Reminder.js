@@ -73,25 +73,29 @@ onChangeCategory = (event) => {
             <List>
               {
                 Object.keys(itemList).map((key) =>{
-                  return(
-                    <ListItem itemDivider >
-                      <Text>{reminderDate(key)}</Text>
-                    </ListItem>
-                      itemList.map((item,index)=>{
-                          return (
-                          <ListItem key = {index}>
-                              <Left>
-                              <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
-                              </Left>
-                              <Right>
-                              <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(index)}/>
-                              </Right>
-                          </ListItem>
-                      )})
+                  return (
+                    <List>
+                      <ListItem itemDivider >
+                        <Text>{reminderDate(key)}</Text>
+                      </ListItem>
+                      {
+                        itemList[key].map((item,index)=>{
+                            return (
+                            <ListItem key = {index}>
+                                <Left>
+                                  <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
+                                </Left>
+                                <Right>
+                                  <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(index)}/>
+                                </Right>
+                            </ListItem>
+                        )})
+                      } 
+                    </List>                   
                   )
                 })
               }
-            </List>
+            </List>            
           </Content>
               {/* <Button onClick = {()=>this.setState({open:true})}>
                 <Icon name='add-circle-outline'></Icon>
