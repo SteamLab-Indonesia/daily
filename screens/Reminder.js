@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, Body, Right, Switch, CheckBox,
    Textarea, View,Fab  } from 'native-base';
 import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
-import RNPickerSelect from 'react-native-picker-select';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
+import {getReminder, getIncomeCategory, getExpenseCategory, updateReminder, insertReminder, reminderDate} from  '../libs/database';
+import { format } from "date-fns";
+
 
 class ReminderList extends Component {
     state={
-        itemList:[
-            {name : 'homework', checked: false},
-            {name : 'lecture', checked: false}],
+        itemList:{}, // id,date,task,complete
         open: false,
         category: [
             {name : 'School'},
@@ -23,9 +23,16 @@ class ReminderList extends Component {
         selected: false
     }
 
+componentDidMount = () =>{
+  getReminder().then((data) => {
+      this.setState({itemList:data})
+  })
+  updateReminder
+}
+
 checkboxPress = (index) => {
     let {itemList} =this.state;
-    itemList[index].checked = !itemList[index].checked;
+    itemList[index].complete = !itemList[index].complete;
     this.setState({itemList})
 }
 
@@ -35,16 +42,16 @@ selectedPress = (index) => {
   this.setState({selected})
 }
 
-// handleSave = () => {
-//   this.setState({open:false})
-//   insertReminder({
-//     reminder: this.state.reminder,
-//     category: this.state.category
-//   }).then(() => {
-//     if(this.props.updateReminder) //kl updateCategory di TransactionList deleted, gbs jln
-//       this.props.updateReminder()
-//   })
-// }
+handleSave = () => {
+  this.dialogComponent.dismiss()
+  insertReminder({
+    reminder: this.state.reminder,
+    // category: this.state.category
+  }).then(() => {
+    if(this.props.updateReminder) //kl updateCategory di TransactionList deleted, gbs jln
+      this.props.updateReminder()
+  })
+}
 
 handleClose = () => {
   this.setState({open:false})
@@ -64,22 +71,25 @@ onChangeCategory = (event) => {
         <Container style = {{backgroundColor :'#1B2732'}}>
           <Content>
             <List>
-              <ListItem itemDivider >
-                <Text>{new Date().toDateString()}</Text>
-              </ListItem>
-
               {
-                  itemList.map((item,index)=>{
-                      return (
-                      <ListItem key = {index}>
-                          <Left>
-                          <Text style={item.checked ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
-                          </Left>
-                          <Right>
-                          <CheckBox checked={item.checked} onPress={()=>this.checkboxPress(index)}/>
-                          </Right>
-                      </ListItem>
-                  )})
+                Object.keys(itemList).map((key) =>{
+                  return(
+                    <ListItem itemDivider >
+                      <Text>{reminderDate(key)}</Text>
+                    </ListItem>
+                      itemList.map((item,index)=>{
+                          return (
+                          <ListItem key = {index}>
+                              <Left>
+                              <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
+                              </Left>
+                              <Right>
+                              <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(index)}/>
+                              </Right>
+                          </ListItem>
+                      )})
+                  )
+                })
               }
             </List>
           </Content>
@@ -147,11 +157,5 @@ onChangeCategory = (event) => {
     );
   }
 }
-
-const config = {
-  width: "350px",
-  height: "400px",
-  floating: true
-};
 
 export default ReminderList;

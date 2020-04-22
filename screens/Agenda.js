@@ -65,7 +65,7 @@ export default class AgendaScreen extends Component {
   renderItem(item) {
     return (
       <TouchableOpacity
-        style={[styles.item, {height: item.height}]} 
+        style={[styles.item, {height: 50}]} 
         onPress={() => Alert.alert(item.name)}
       >
         <Text>{item.name}</Text>

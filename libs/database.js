@@ -6,7 +6,12 @@ const usersCollection = firestore().collection('Users');
 
 export function timeToString(time) {
     const date = new Date(time);
-    return format(date, "dd-MM-yyyy");
+    return format(date, "yyyy-MM-dd");
+}
+
+export function reminderDate(time) {
+	const date = new Date(time);
+    return format(date, "E..EEE, yyyy-MM-dd");
 }
 
 export function getReminder(){
@@ -105,12 +110,12 @@ export function getExpenseCategory(){
   })
 }
 
-export function updateTransaction(transactionId, newData){
+export function updateReminder(reminderID, newData){
 	return new Promise((resolve,reject)=>{
-		if (transactionId)
+		if (reminderID)
 		{
 			const db = firebase.firestore();
-			let currentDoc = db.collection('Transaction').doc(transactionId);
+			let currentDoc = reminderCollection.doc(reminderID);
 			if (currentDoc)
 			{
 				currentDoc.set(newData).then(()=>
@@ -121,17 +126,16 @@ export function updateTransaction(transactionId, newData){
 		}
 		else
 		{
-			reject('Invalid Transaction ID')
+			reject('Invalid Reminder ID')
 		}
 	})
 }
 
-export function insertTransaction(newData){
+export function insertReminder(newData){
 	return new Promise((resolve,reject)=>{
 		if (newData)
 		{
-			const db = firebase.firestore();
-			db.collection('Transaction').add(newData)
+			reminderCollection.add(newData)
 			.then((snapshot) => {
 				console.log(snapshot);
 				resolve(snapshot.id);
@@ -146,7 +150,7 @@ export function insertTransaction(newData){
 		}
 		else
 		{
-			reject('Invalid Transaction ID')
+			reject('Invalid Reminder ID')
 		}
 	})
 }
