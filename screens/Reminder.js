@@ -5,7 +5,7 @@ import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, B
 import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
-import {getReminder, getCategory, updateReminder, insertReminder, reminderDate} from  '../libs/database';
+import {getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString} from  '../libs/database';
 import { format } from "date-fns";
 
 
@@ -50,14 +50,16 @@ onChangeCategoryPress = ((value) =>{ //simpan di state
 
 handleSave = () => {
   let {itemList, reminder, category, selectedCat} = this.state;
-  this.dialogComponent.dismiss()
-  insertReminder({ //save di database
+  this.dialogComponent.dismiss();
+  let newReminder = { //save di database
     date: new Date(),
     task: reminder,
     complete: false,
     category: selectedCat
-  }).then((id)=>{
-    itemList['date'].push({name: reminder, complete: false, date: new Date(), id:id, category: selectedCat})
+  };
+  insertReminder(newReminder).then((id)=>{
+    newReminder.id = id;
+    itemList[timeToString(newReminder.date)].push({name: reminder, complete: false, date: new Date(), id:id, category: selectedCat})
     this.setState({itemList}) //tampilan di hp
   })
 }

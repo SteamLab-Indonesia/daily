@@ -111,20 +111,17 @@ export function insertReminder(newData){
 	return new Promise((resolve,reject)=>{
 		if (newData)
 		{
+			// newData.category is still string
 			if (newData.category)
+			{
+				// Convert to document reference (category collection)
 				newData.category = categoryCollection.doc(newData.category);
+			}
 			reminderCollection.add(newData)
 			.then((snapshot) => {
 				console.log(snapshot);
 				resolve(snapshot.id);
 			})
-			// if (currentDoc)
-			// {
-			// 	currentDoc.add(newData).then(()=>
-			// 	{
-			// 		resolve('success');
-			// 	}).catch((err) => reject(err));
-			// }
 		}
 		else
 		{
@@ -143,13 +140,7 @@ export function insertCategory(newData){
 				console.log(snapshot);
 				resolve(snapshot.id);
 			})
-			// if (currentDoc)
-			// {
-			// 	currentDoc.add(newData).then(()=>
-			// 	{
-			// 		resolve('success');
-			// 	}).catch((err) => reject(err));
-			// }
+
 		}
 		else
 		{
