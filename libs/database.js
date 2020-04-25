@@ -29,7 +29,8 @@ export function getReminder(){
 						id: snapshot.docs[i].id,
 						date: snapshot.docs[i].data().date,
 						name: snapshot.docs[i].data().task,
-						complete: snapshot.docs[i].data().complete
+						complete: snapshot.docs[i].data().complete,
+						category: snapshot.docs[i].data().category
                     };
                     if (! data[timeToString(object.date.toDate())])
                         data[timeToString(object.date.toDate())] = []; //initialise
@@ -50,13 +51,14 @@ export function getCategory(){
 				resolve(null);
 			}
 			else{
-				let data = {};
+				let data = [];
 				for (let i=0;i< snapshot.docs.length; ++i){
 					let object = {
 						id: snapshot.docs[i].id,
 						category: snapshot.docs[i].data().listCat,
 						color: snapshot.docs[i].data().color
-                    };
+					};
+					data.push(object);
                 }
 				resolve(data);
 			}

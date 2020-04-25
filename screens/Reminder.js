@@ -49,15 +49,15 @@ onChangeCategoryPress = ((value) =>{ //simpan di state
 // }
 
 handleSave = () => {
-  let {itemList, reminder, category} = this.state;
+  let {itemList, reminder, selectedCat} = this.state;
   this.dialogComponent.dismiss()
   insertReminder({ //save di database
     date: new Date(),
     task: reminder,
     complete: false,
-    category: category
+    category: selectedCat
   }).then((id)=>{
-    itemList['date'].push({name: reminder, complete: false, date: new Date(), id:id, category: category})
+    itemList['date'].push({name: reminder, complete: false, date: new Date(), id:id, category: selectedCat})
     this.setState({itemList}) //tampilan di hp
   })
 }
@@ -153,7 +153,7 @@ onChangeReminder =(value) => {
               onValueChange = {(event) => this.onChangeCategoryPress(event)}
             >
               {category.map((item)=>{
-                return <Picker.Item label={item.name} value={item.id} />
+                return <Picker.Item label={item.category} value={item.category} />
               })}
             </Picker>
             <Button onPress={()=>this.dialogComponent2.show()} style={{width:60, backgroundColor:'gray'}}>
