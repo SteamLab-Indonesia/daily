@@ -55,7 +55,7 @@ export function getCategory(){
 				for (let i=0;i< snapshot.docs.length; ++i){
 					let object = {
 						id: snapshot.docs[i].id,
-						category: snapshot.docs[i].data().listCat,
+						listCat: snapshot.docs[i].data().listCat,
 						color: snapshot.docs[i].data().color
 					};
 					data.push(object);
@@ -133,8 +133,7 @@ export function insertCategory(newData){
 	return new Promise((resolve,reject)=>{
 		if (newData)
 		{
-			const db = firebase.firestore();
-			db.collection('Category').add(newData)
+			categoryCollection.add(newData)
 			.then((snapshot) => {
 				console.log(snapshot);
 				resolve(snapshot.id);

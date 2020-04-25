@@ -5,7 +5,7 @@ import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, B
 import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
-import {getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString} from  '../libs/database';
+import {getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
 
 
@@ -16,7 +16,8 @@ class ReminderList extends Component {
         category: [],
         selectedCat: '',
         reminder: '',
-        selected: false
+        selected: false,
+        newCategory: ''
     }
 
 componentDidMount = () =>{
@@ -34,6 +35,10 @@ checkboxPress = (key,index) => {
     // Only update complete field
     updateReminder(itemList[key][index].id, {complete: itemList[key][index].complete });
     this.setState({itemList});
+}
+
+onNewCategory = (value) => {
+  this.setState({newCategory:value})
 }
 
 onChangeCategoryPress = ((value) =>{ //simpan di state
@@ -77,17 +82,14 @@ handleSave = () => {
 //     // }    
 // }
 
-// handleSaveCategory = () => {
-//   this.dialogComponent.dismiss()
-//   insertCategory({
-//     date: new Date(),
-//     task: this.state.reminder,
-//     complete: false
-//   }).then((id)=>{
-//     itemList['date'].push({name: this.state.reminder, complete: false, date: new Date(), id:id})
-//     this.setState({itemList})
-//   })
-// }
+handleSaveCategory = () => {
+  let {newCategory, category} = this.state;
+  this.dialogComponent2.dismiss();
+  insertCategory({listCat: newCategory, color: 'black'}).then((id)=>{
+    category.push({id:id, listCat: newCategory, color: 'black'})
+    this.setState({category}) //tampilan di hp
+  })
+}
 
 handleClose = () => {
   this.setState({open:false})
@@ -102,7 +104,7 @@ onChangeReminder =(value) => {
     let foundCategory = category.filter((item) => item.id == categoryId);
     console.log(foundCategory);
     if (foundCategory.length > 0)
-      return foundCategory[0].category;
+      return foundCategory[0].listCat;
     else
       return '';
   }
@@ -123,9 +125,11 @@ onChangeReminder =(value) => {
                       {
                       itemList[date].map((item,index)=>{
                           return (
+                            //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js
                           <ListItem key = {index}>
                               <Left>
-                                <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
+                                <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}
+                                onPress={()=>this.props.navigation.navigate('Timer', {itemName:item.name})}>{item.name}</Text> 
                                 <Text>{this.getCategoryName(item.category.id)}</Text>
                               </Left>
                               <Right>
@@ -162,28 +166,29 @@ onChangeReminder =(value) => {
               onValueChange = {(event) => this.onChangeCategoryPress(event)}
             >
               {category.map((item)=>{
-                return <Picker.Item label={item.category} value={item.id} />
+                return <Picker.Item label={item.listCat} value={item.id} />
               })}
             </Picker>
             <Button onPress={()=>this.dialogComponent2.show()} style={{width:60, backgroundColor:'gray'}}>
               <Icon name='add-circle' />
             </Button>
-            <DialogComponent
-              ref={(dialogComponent2) => { this.dialogComponent = dialogComponent2; }}
+            
+          </View>
+          <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
+          <DialogButton text = 'Save' onPress={this.handleSave} color="primary" />
+        </DialogComponent>
+          <DialogComponent
+              ref={(dialogComponent2) => { this.dialogComponent2 = dialogComponent2; }}
             >
               <View>
                 <Text>
                   Add New Category
                 </Text>
-                <Textarea rowSpan={3} bordered placeholder="Input New Category"/>
+                <Textarea rowSpan={3} bordered placeholder="Input New Category" onChangeText = {(text) => this.onNewCategory(text)}/>
               </View>
-              <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
+              <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent2.dismiss()} color="primary" />
               <DialogButton text = 'Save' onPress={this.handleSaveCategory} color="primary" />
             </DialogComponent>
-          </View>
-          <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
-          <DialogButton text = 'Save' onPress={this.handleSave} color="primary" />
-        </DialogComponent>
           </Content>
               {/* <Button onClick = {()=>this.setState({open:true})}>
                 <Icon name='add-circle-outline'></Icon>
