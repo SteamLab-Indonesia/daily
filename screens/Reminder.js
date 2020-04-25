@@ -31,8 +31,9 @@ componentDidMount = () =>{
 checkboxPress = (key,index) => {
     let {itemList} =this.state;
     itemList[key][index].complete = !itemList[key][index].complete;
-    this.setState({itemList})
-    console.log(itemList)
+    // Only update complete field
+    updateReminder(itemList[key][index].id, {complete: itemList[key][index].complete });
+    this.setState({itemList});
 }
 
 onChangeCategoryPress = ((value) =>{ //simpan di state

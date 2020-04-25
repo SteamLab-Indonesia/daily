@@ -90,11 +90,10 @@ export function updateReminder(reminderID, newData){
 	return new Promise((resolve,reject)=>{
 		if (reminderID)
 		{
-			const db = firebase.firestore();
 			let currentDoc = reminderCollection.doc(reminderID);
 			if (currentDoc)
 			{
-				currentDoc.set(newData).then(()=>
+				currentDoc.update(newData).then(()=>
 				{
 					resolve('success');
 				}).catch((err) => reject(err));
