@@ -94,6 +94,16 @@ onChangeReminder =(value) => {
   this.setState({reminder: value});
 }
 
+  getCategoryName = (categoryId) => {
+    let {category} = this.state;
+    let foundCategory = category.filter((item) => item.id == categoryId);
+    console.log(foundCategory);
+    if (foundCategory.length > 0)
+      return foundCategory[0].category;
+    else
+      return '';
+  }
+
   render() {
       let {itemList, category} = this.state;
     return (
@@ -112,7 +122,8 @@ onChangeReminder =(value) => {
                           return (
                           <ListItem key = {index}>
                               <Left>
-                              <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
+                                <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}>{item.name}</Text>
+                                <Text>{this.getCategoryName(item.category.id)}</Text>
                               </Left>
                               <Right>
                               <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>

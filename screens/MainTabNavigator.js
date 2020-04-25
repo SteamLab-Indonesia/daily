@@ -7,7 +7,6 @@ import Reminder from './Reminder';
 import Settings from './Settings';
 import Agenda from './Agenda';
 // import Calendar from './Calendar';
-import CalendarList from './CalendarList';
 import MainBackground from "../components/MainBackground";
   
 const Tab = createBottomTabNavigator();
