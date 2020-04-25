@@ -49,7 +49,7 @@ onChangeCategoryPress = ((value) =>{ //simpan di state
 // }
 
 handleSave = () => {
-  let {itemList, reminder, selectedCat} = this.state;
+  let {itemList, reminder, category, selectedCat} = this.state;
   this.dialogComponent.dismiss()
   insertReminder({ //save di database
     date: new Date(),
@@ -123,11 +123,6 @@ onChangeReminder =(value) => {
                     </List>)
                 })
               }
-            
-          </Content>
-              {/* <Button onClick = {()=>this.setState({open:true})}>
-                <Icon name='add-circle-outline'></Icon>
-              </Button> */}
         <View style={{ flex: 1 }}>
           <Fab
             containerStyle={{ }}
@@ -153,7 +148,7 @@ onChangeReminder =(value) => {
               onValueChange = {(event) => this.onChangeCategoryPress(event)}
             >
               {category.map((item)=>{
-                return <Picker.Item label={item.category} value={item.category} />
+                return <Picker.Item label={item.category} value={item.id} />
               })}
             </Picker>
             <Button onPress={()=>this.dialogComponent2.show()} style={{width:60, backgroundColor:'gray'}}>
@@ -175,40 +170,11 @@ onChangeReminder =(value) => {
           <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
           <DialogButton text = 'Save' onPress={this.handleSave} color="primary" />
         </DialogComponent>
-              
-              
-              {/* <Textarea
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Reminder"
-                onChange = {(event) => this.onChangeReminder(event)}
-                type="text"
-                fullWidth
-              /> */}
-              
-              
-              {/* <RNPickerSelect
-                  onValueChange={(event) => this.onChangeCategory(event)}
-                  required
-                  id="category"
-                  placeholder = 'Category'
-                  
-                  // {
-                  //   category.map((item,index)=>{
-                  //       return (
-                  //         <ListItem onPress={()=>this.selectedPress(index)} selected={this.state.selected} key={index}>
-                  //           <Text>{item.name}</Text>
-                  //         </ListItem>
-                  //   )})
-                  // }
-                  
-                  items={[
-                      { label: 'Football', value: 'football' },
-                      { label: 'Baseball', value: 'baseball' },
-                      { label: 'Hockey', value: 'hockey' },
-                  ]} */}
-              {/* /> */}
+          </Content>
+              {/* <Button onClick = {()=>this.setState({open:true})}>
+                <Icon name='add-circle-outline'></Icon>
+              </Button> */}
+
         </Container>
 
         
