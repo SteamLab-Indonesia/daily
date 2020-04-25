@@ -3,6 +3,7 @@ import { format } from "date-fns";
 
 const reminderCollection = firestore().collection('reminder');
 const usersCollection = firestore().collection('Users');
+const categoryCollection = firestore().collection('category');
 
 export function timeToString(time) {
     const date = new Date(time);
@@ -11,7 +12,7 @@ export function timeToString(time) {
 
 export function reminderDate(time) {
 	const date = new Date(time);
-    return format(date, "eee, yyyy MMM dd");
+    return format(date, "eee, MMMM dd yyyy");
 }
 
 export function getReminder(){
@@ -34,6 +35,29 @@ export function getReminder(){
                         data[timeToString(object.date.toDate())] = []; //initialise
                     data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
 				}
+				resolve(data);
+			}
+        })
+        .catch((err) => reject(err));
+  })
+}
+
+export function getCategory(){
+	return new Promise((resolve,reject)=>{
+		categoryCollection.get()
+		.then((snapshot) => {
+			if(snapshot.empty){
+				resolve(null);
+			}
+			else{
+				let data = {};
+				for (let i=0;i< snapshot.docs.length; ++i){
+					let object = {
+						id: snapshot.docs[i].id,
+						category: snapshot.docs[i].data().listCat,
+						color: snapshot.docs[i].data().color
+                    };
+                }
 				resolve(data);
 			}
         })
