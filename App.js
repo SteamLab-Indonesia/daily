@@ -4,8 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './screens/SplashScreen';
 import Login from './screens/Login';
+import SignUp from './screens/SignUp';
 import MainTabNavigator from './screens/MainTabNavigator';
 import TimerScreen from './screens/TimerScreen';
+import SignUp from './screens/SignUp';
 
 function HomeScreen({ navigation }) {
     return (
@@ -41,6 +43,7 @@ class App extends Component {
         <Stack.Navigator initialRouteName="Splash">
             <Stack.Screen name="Splash" component={SplashScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />  
+            <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}} />  
             <Stack.Screen name="Main" component={MainTabNavigator} options={{headerShown: false}}/>  
             <Stack.Screen name="Timer" component={TimerScreen} options={{headerShown: false}}/>
         </Stack.Navigator>

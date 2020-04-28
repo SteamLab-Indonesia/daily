@@ -6,7 +6,8 @@ import {
   View, //div
   Text, //headings h1 h2
   StatusBar, //time, date
-  Button
+  Button,
+  Dimensions,
 } from 'react-native';
 
 import {
@@ -57,13 +58,24 @@ class TimerScreen extends Component{
       <View>
         <Text style={{fontSize:20}}>{itemName}</Text>
         <Text style={{fontSize:32}}>{strHMS}</Text>
-        <Button title={this.state.buttonText} onPress={this.handlePress}></Button>
+        <Button style={styles.buttonText} title={this.state.buttonText} onPress={this.handlePress}></Button>
       </View>
     )
   }
 }
 
+const screen = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+    buttonText:{
+        borderWidth: 10,
+        borderColor: '#B9AAFF',
+        width: screen.width/2,
+        height: screen.width/2,
+        borderRadius: screen.width/2,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
   scrollView: {
     backgroundColor: Colors.lighter,
   },

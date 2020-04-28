@@ -25,6 +25,10 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate('Main');
   };
 
+  const _onSignUpPressed =({navigation}) =>{
+    navigation.navigate('SignUp');
+  }
+
   return (
     <Background>
 
@@ -54,7 +58,7 @@ const LoginScreen = ({ navigation }) => {
       />
 
       <Button title="Login" onPress={_onLoginPressed} />
-
+      <Button title="New User? SIGN UP" onPress={_onSignUpPressed} />
       {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ForgotPasswordScreen')}

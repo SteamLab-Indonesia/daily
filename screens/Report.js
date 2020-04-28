@@ -30,28 +30,46 @@ const styles = {
     }
   };
 
+
 class Report extends Component{
+  state={
+    category:[],
+
+  }
+
+  componentDidMount = () =>{
+    getCategory().then((data)=>{
+      this.setState({category:data})
+    })
+  }
+
     render(){
         return(
             <div className = {classes.container}>
                 <DoughnutSummary
-                    title='Weekly Summary'
+                    title='Summary'
                     data={{
-                    labels:incomeSection.map((item)=>item.name),
+                    labels:category.map((item)=>item.listCat),
                     datasets:[{
-                        data: incomeSection.map((item)=>item.amount),
-                        backgroundColor: incomeSection.map((item)=>item.color)}]
+                        data: category.map((item)=>{
+                          let number=0;
+                          for (i=0; i< item.listCat.length; i++){
+                            number+=1
+                            return number;
+                          }
+                        }),
+                        backgroundColor: category.map((item)=>item.color)}]
                     }}
                 />
-                <DoughnutSummary
+                {/* <DoughnutSummary
                     title='Monthly Summary'
                     data={{
-                    labels:expenseSection.map((item)=>item.name),
+                    labels:category.map((item)=>item.name),
                     datasets:[{
-                        data: expenseSection.map((item)=>item.amount),
-                        backgroundColor: expenseSection.map((item)=>item.color)}]
+                        data: category.map((item)=>item.amount),
+                        backgroundColor: category.map((item)=>item.color)}]
                     }}
-                />
+                /> */}
             </div>
         )
     }
