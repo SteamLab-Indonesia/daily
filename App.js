@@ -7,7 +7,6 @@ import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import MainTabNavigator from './screens/MainTabNavigator';
 import TimerScreen from './screens/TimerScreen';
-import SignUp from './screens/SignUp';
 
 function HomeScreen({ navigation }) {
     return (

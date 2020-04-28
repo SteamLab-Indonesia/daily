@@ -18,11 +18,24 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import {WheelPicker} from 'react-native-wheel-picker-android'
+
+//Array(60) = create a new empty array with length 60
+//Array(60).keys = will get [0,1,2,3,...60]
+//Array.from(...) = create an array with value inside brackets from (...)
+const hourOptions = Array.from(Array(24).keys()).map((key)=> (('00')+key).slice(-2));
+const minuteOptions = Array.from(Array(60).keys()).map((key)=> (('00')+key).slice(-2)); 
+
 class TimerScreen extends Component{
   state = {
     buttonText: 'START',
     timer: null,
-    totalSeconds: 300
+    totalSeconds: 300,
+    showPicker:true,
+  }
+
+  onChange = () => {
+    this.setState({showPicker:false})
   }
 
   reduceTimer =()=>{
@@ -50,14 +63,24 @@ class TimerScreen extends Component{
     let output_str = ('00' + hour).slice(-2) + ':' + ('00' + minute).slice(-2) + ':' + ('00' + seconds).slice(-2)
     return output_str
   }
-
+  
   render(){
     let strHMS = this.convertHMS()
     const {itemName} = this.props.route.params
     return(
-      <View>
+      <View style={{flex:1, flexDirection:'column'}}>
         <Text style={{fontSize:20}}>{itemName}</Text>
-        <Text style={{fontSize:32}}>{strHMS}</Text>
+        <View style = {{height:'20%', flexDirection:'row'}}>
+          <WheelPicker
+          data={hourOptions}
+          onItemSelected={this.onChange}
+          />
+          <WheelPicker
+          data={minuteOptions}
+          />
+        </View>
+        
+        {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
         <Button style={styles.buttonText} title={this.state.buttonText} onPress={this.handlePress}></Button>
       </View>
     )
