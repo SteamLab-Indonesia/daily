@@ -32,7 +32,7 @@ class TimerScreen extends Component{
     timer: null,
     totalSeconds: 300,
     hourSelected: 0,
-    minuteSelected: 5
+    minuteSelected: 0
   }
 
   onChangeMinute = (selectedItem) => {
@@ -90,7 +90,7 @@ class TimerScreen extends Component{
         
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
         <Button style={styles.buttonText} title={this.state.buttonText} 
-        onPress={()=>this.props.navigation.navigate('Countdown'), {timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected}}></Button>
+        onPress={()=>this.props.navigation.navigate('Countdown', {timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></Button>
       </View>
     )
   }
