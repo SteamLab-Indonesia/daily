@@ -77,11 +77,12 @@ class TimerScreen extends Component{
           />
           <WheelPicker
           data={minuteOptions}
+          onItemSelected={this.onChange}
           />
         </View>
         
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
-        <Button style={styles.buttonText} title={this.state.buttonText} onPress={this.handlePress}></Button>
+        <Button style={styles.buttonText} title={this.state.buttonText} onPress={()=>this.props.navigation.navigate('Countdown')}></Button>
       </View>
     )
   }

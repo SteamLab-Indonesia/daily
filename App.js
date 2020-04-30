@@ -7,6 +7,7 @@ import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import MainTabNavigator from './screens/MainTabNavigator';
 import TimerScreen from './screens/TimerScreen';
+import CountdownScreen from './screens/CountdownScreen';
 
 function HomeScreen({ navigation }) {
     return (
@@ -45,6 +46,7 @@ class App extends Component {
             <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}} />  
             <Stack.Screen name="Main" component={MainTabNavigator} options={{headerShown: false}}/>  
             <Stack.Screen name="Timer" component={TimerScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Countdown" component={CountdownScreen} options={{headerShown: false}}/>
         </Stack.Navigator>
         </NavigationContainer>
         )
