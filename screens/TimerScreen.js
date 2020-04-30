@@ -31,11 +31,16 @@ class TimerScreen extends Component{
     buttonText: 'START',
     timer: null,
     totalSeconds: 300,
-    showPicker:true,
+    hourSelected: 0,
+    minuteSelected: 5
   }
 
-  onChange = () => {
-    this.setState({showPicker:false})
+  onChangeMinute = (selectedItem) => {
+    this.setState({minuteSelected:selectedItem})
+  }
+
+  onChangeHour = (selectedItem) => {
+    this.setState({hourSelected:selectedItem})
   }
 
   reduceTimer =()=>{
@@ -66,23 +71,26 @@ class TimerScreen extends Component{
   
   render(){
     let strHMS = this.convertHMS()
-    const {itemName} = this.props.route.params
+    const {itemName} = this.props.route.params //get parameter value from reminder.js
     return(
-      <View style={{flex:1, flexDirection:'column'}}>
+      <View style={{flex:1, flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
         <Text style={{fontSize:20}}>{itemName}</Text>
         <View style = {{height:'20%', flexDirection:'row'}}>
           <WheelPicker
           data={hourOptions}
-          onItemSelected={this.onChange}
+          onItemSelected={this.onChangeHour}
+          selectedItem={this.state.hourSelected}
           />
           <WheelPicker
           data={minuteOptions}
-          onItemSelected={this.onChange}
+          onItemSelected={this.onChangeMinute}
+          selectedItem={this.state.minuteSelected}
           />
         </View>
         
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
-        <Button style={styles.buttonText} title={this.state.buttonText} onPress={()=>this.props.navigation.navigate('Countdown')}></Button>
+        <Button style={styles.buttonText} title={this.state.buttonText} 
+        onPress={()=>this.props.navigation.navigate('Countdown'), {timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected}}></Button>
       </View>
     )
   }
