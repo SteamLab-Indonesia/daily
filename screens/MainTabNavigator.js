@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Reminder from './Reminder';
 import Settings from './Settings';
 import Agenda from './Agenda';
-// import Report from './Report'
+import DoughnutSummary from './DoughnutSummary';
 // import Calendar from './Calendar';
 import MainBackground from "../components/MainBackground";
   
@@ -41,7 +41,7 @@ class MainTabNavigator extends Component{
                     <Tab.Screen name="Reminder" component={Reminder} />
                     <Tab.Screen name="Calendar" component={Agenda} />
                     <Tab.Screen name="Settings" component={Settings} />
-                    {/* <Tab.Screen name="Report" component={Report} /> */}
+                    <Tab.Screen name="Report" component={DoughnutSummary} />
                 </Tab.Navigator>
             
         )

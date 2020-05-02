@@ -128,9 +128,11 @@ onChangeReminder =(value) => {
                             //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js
                           <ListItem key = {index}>
                               <Left>
-                                <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}
-                                onPress={()=>this.props.navigation.navigate('Timer', {itemName:item.name})}>{item.name}</Text> 
-                                <Text>{this.getCategoryName(item.category.id)}</Text>
+                                <View style={{flex:1, flexDirection:'column'}}>
+                                  <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}
+                                  onPress={()=>this.props.navigation.navigate('Timer', {itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
+                                  <Text style={{ color: 'grey'}}>{this.getCategoryName(item.category.id)}</Text>
+                                </View>
                               </Left>
                               <Right>
                               <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>

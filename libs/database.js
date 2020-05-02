@@ -4,6 +4,7 @@ import { format } from "date-fns";
 const reminderCollection = firestore().collection('reminder');
 const usersCollection = firestore().collection('Users');
 const categoryCollection = firestore().collection('category');
+const statisticsCollection = firestore().collection('statistics');
 
 export function timeToString(time) {
     const date = new Date(time);
@@ -62,6 +63,56 @@ export function getCategory(){
                 }
 				resolve(data);
 			}
+        })
+        .catch((err) => reject(err));
+  })
+}
+
+export function getStatistics(month,year,category){
+	return new Promise((resolve,reject)=>{
+		statisticsCollection
+		.where('month', '==', month)
+		.where('year', '==', year)
+		.where('category', '==', categoryCollection.doc(category))
+		.get()
+		.then((snapshot) => {
+			if(snapshot.empty){
+				resolve(null);
+			}
+			else{
+				let data = {
+					id: snapshot.docs[0].id,
+					month: snapshot.docs[0].data().month,
+					category: snapshot.docs[0].data().category,
+				};
+				resolve(data);
+			}
+        })
+        .catch((err) => reject(err));
+  })
+}
+
+export function addStatistics(newData){
+	return new Promise((resolve,reject)=>{
+		if (newData.category)
+			{
+				// Convert to document reference (category collection)
+				newData.category = categoryCollection.doc(newData.category);
+			}
+		statisticsCollection
+		.add(newData)
+		.then((snapshot) => {
+			resolve(snapshot.id);
+        })
+        .catch((err) => reject(err));
+  })
+}
+
+export function updateStatistics(id,duration){
+	return new Promise((resolve,reject)=>{
+		statisticsCollection.doc(id).update({duration})
+		.then((snapshot) => {
+			resolve('success')
         })
         .catch((err) => reject(err));
   })
