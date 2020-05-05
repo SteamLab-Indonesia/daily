@@ -38,7 +38,7 @@ export function getLatestEmail () { //simpan login terakhir
 
 export function saveLatestEmail (email) {
     realm.write(() => {
-        savedApp = realm.create('App', {
+        realm.create('App', {
             email: email,
         });
     });
@@ -47,7 +47,7 @@ export function saveLatestEmail (email) {
 export function saveAccount (email,password) { //simpan di realm
     // Write
     realm.write(() => {
-        savedAccount = realm.create('Account', {
+        realm.create('Account', {
             email: email,
             password: password,
         });
