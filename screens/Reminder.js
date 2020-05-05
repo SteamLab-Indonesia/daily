@@ -22,7 +22,6 @@ class ReminderList extends Component {
     }
 
 componentDidMount = () =>{
-  const {email} = this.props.route.params
   getUser(email).then((data) => {
     this.setState({usernameID : data.id}) //dalam bentuk apa? user/id? or cmn id?
     console.log(data.id)

@@ -8,7 +8,7 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
-import { login, updateUser } from '../libs/database';
+import { login } from '../libs/database';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -27,7 +27,6 @@ const LoginScreen = ({ navigation }) => {
 
     login(email, password).then((resp) => {
       alert('Login successful');
-      updateUser(email)
       setEmail({ value: '', error: ''})
       setPassword({ value: '', error: ''})
       setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
@@ -36,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
         alert(err);
     })
 
-    navigation.navigate('Main', {email:email});
+    navigation.navigate('Main');
   };
 
   const _onSignUpPressed = () =>{

@@ -168,7 +168,6 @@ export function login(username, password) {
 
 	return new Promise((resolve, reject) => {
 		auth().signInWithEmailAndPassword(username, password).then(() => {
-			updateUser(username);
 			resolve();
 		}).catch((err)=>reject(err));
 	})
