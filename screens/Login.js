@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { CheckBox , View, Left } from 'native-base';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
@@ -7,10 +8,12 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
+import { login, updateUser } from '../libs/database';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
 
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -22,10 +25,21 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    navigation.navigate('Main');
+    login(email, password).then((resp) => {
+      alert('Login successful');
+      updateUser(email)
+      setEmail({ value: '', error: ''})
+      setPassword({ value: '', error: ''})
+      setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
+    })
+    .catch((err) => {
+        alert(err);
+    })
+
+    navigation.navigate('Main', {email:email});
   };
 
-  const _onSignUpPressed =({navigation}) =>{
+  const _onSignUpPressed = () =>{
     navigation.navigate('SignUp');
   }
 
@@ -56,7 +70,8 @@ const LoginScreen = ({ navigation }) => {
         errorText={password.error}
         secureTextEntry
       />
-
+        <CheckBox checked={checkboxPress.value} onPress={()=>setCheckboxPress({value:!value, error: ''})}/>
+        <Text>Remember Me</Text>
       <Button title="Login" onPress={_onLoginPressed} />
       <Button title="New User? SIGN UP" onPress={_onSignUpPressed} />
       {/* <View style={styles.forgotPassword}>

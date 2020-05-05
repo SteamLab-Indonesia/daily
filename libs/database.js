@@ -1,10 +1,36 @@
 import firestore from '@react-native-firebase/firestore';
 import { format } from "date-fns";
+import auth from '@react-native-firebase/auth'
 
 const reminderCollection = firestore().collection('reminder');
-const usersCollection = firestore().collection('Users');
 const categoryCollection = firestore().collection('category');
 const statisticsCollection = firestore().collection('statistics');
+const usersCollection = firestore().collection('user');
+
+export function getUser(username){
+	return new Promise((resolve,reject)=>{
+		usersCollection
+		.where('user', '==', username)
+		.get()
+		.then((snapshot) => {
+			if(snapshot.empty){
+				resolve(null);
+			}
+			else{
+				let data = [];
+				for (let i=0;i< snapshot.docs.length; ++i){
+					let object = {
+						id: snapshot.docs[i].id,
+						user: snapshot.docs[i].data().user,
+					};
+					data.push(object);
+                }
+				resolve(data);
+			}
+        })
+        .catch((err) => reject(err));
+  })
+}
 
 export function timeToString(time) {
     const date = new Date(time);
@@ -16,9 +42,17 @@ export function reminderDate(time) {
     return format(date, "eee, MMMM dd yyyy");
 }
 
-export function getReminder(){
+export function reminderMM(time) {
+	const date = new Date(time);
+    return format(date, "MMMM");
+}
+
+export function getReminder(usernameID){
 	return new Promise((resolve,reject)=>{
-		reminderCollection.get()
+		reminderCollection
+		.where('user', '==', usersCollection.doc(usernameID)) //brti pas onlineAccounting, user jg ad di chatroom? as reference?
+		.orderBy('timestamp', 'desc')
+		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
@@ -31,7 +65,8 @@ export function getReminder(){
 						date: snapshot.docs[i].data().date,
 						name: snapshot.docs[i].data().task,
 						complete: snapshot.docs[i].data().complete,
-						category: snapshot.docs[i].data().category
+						category: snapshot.docs[i].data().category,
+						user: snapshot.docs[i].data().user
                     };
                     if (! data[timeToString(object.date.toDate())])
                         data[timeToString(object.date.toDate())] = []; //initialise
@@ -69,21 +104,28 @@ export function getCategory(){
 }
 
 export function getStatistics(month,year,category){
+	if(typeof category != 'object')
+		category = categoryCollection.doc(category);
 	return new Promise((resolve,reject)=>{
 		statisticsCollection
 		.where('month', '==', month)
 		.where('year', '==', year)
-		.where('category', '==', categoryCollection.doc(category))
+		.where('category', '==',category)
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
 			}
 			else{
+				let duration= snapshot.docs[0].data().duration;
+				if (!duration){
+					duration = 0;
+				}
 				let data = {
 					id: snapshot.docs[0].id,
 					month: snapshot.docs[0].data().month,
 					category: snapshot.docs[0].data().category,
+					duration
 				};
 				resolve(data);
 			}
@@ -96,8 +138,12 @@ export function addStatistics(newData){
 	return new Promise((resolve,reject)=>{
 		if (newData.category)
 			{
+				//if category is string (not object), then need conversion
+				if(typeof newData.category != 'object')
 				// Convert to document reference (category collection)
-				newData.category = categoryCollection.doc(newData.category);
+				{
+					newData.category = categoryCollection.doc(newData.category);
+				}
 			}
 		statisticsCollection
 		.add(newData)
@@ -121,7 +167,7 @@ export function updateStatistics(id,duration){
 export function login(username, password) {
 
 	return new Promise((resolve, reject) => {
-		firebase.auth().signInWithEmailAndPassword(username, password).then(() => {
+		auth().signInWithEmailAndPassword(username, password).then(() => {
 			updateUser(username);
 			resolve();
 		}).catch((err)=>reject(err));
@@ -130,7 +176,7 @@ export function login(username, password) {
 
 export function logout() {
 	return new Promise((resolve, reject) => {
-		firebase.auth().signOut().then(() => {
+		auth().signOut().then(() => {
 			resolve('success');
 		})
 		.catch((err) => reject(err))

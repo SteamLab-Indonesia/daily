@@ -71,7 +71,7 @@ class TimerScreen extends Component{
   
   render(){
     let strHMS = this.convertHMS()
-    const {itemName,itemCategory} = this.props.route.params //get parameter value from reminder.js
+    const {itemName,itemCategory,itemDate} = this.props.route.params //get parameter value from reminder.js
     return(
       <View style={{flex:1, flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
         <Text style={{fontSize:20}}>{itemName}</Text>
@@ -90,7 +90,7 @@ class TimerScreen extends Component{
         
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
         <Button style={styles.buttonText} title={this.state.buttonText} 
-        onPress={()=>this.props.navigation.navigate('Countdown', {itemCategory,timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></Button>
+        onPress={()=>this.props.navigation.navigate('Countdown', {itemDate,itemName, itemCategory,timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></Button>
       </View>
     )
   }

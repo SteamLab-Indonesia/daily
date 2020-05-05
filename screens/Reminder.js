@@ -5,7 +5,7 @@ import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, B
 import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
-import {getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
+import {getUser, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
 
 
@@ -17,11 +17,17 @@ class ReminderList extends Component {
         selectedCat: '',
         reminder: '',
         selected: false,
-        newCategory: ''
+        newCategory: '',
+        usernameID: ''
     }
 
 componentDidMount = () =>{
-  getReminder().then((data) => {
+  const {email} = this.props.route.params
+  getUser(email).then((data) => {
+    this.setState({usernameID : data.id}) //dalam bentuk apa? user/id? or cmn id?
+    console.log(data.id)
+  })
+  getReminder(this.state.usernameID).then((data) => {
     this.setState({itemList:data})
   })
   getCategory().then((data)=>{
@@ -55,17 +61,18 @@ onChangeCategoryPress = ((value) =>{ //simpan di state
 // }
 
 handleSave = () => {
-  let {itemList, reminder, category, selectedCat} = this.state;
+  let {itemList, reminder, category, selectedCat, usernameID} = this.state;
   this.dialogComponent.dismiss();
   let newReminder = { //save di database
     date: new Date(),
     task: reminder,
     complete: false,
-    category: selectedCat
+    category: selectedCat,
+    user: usernameID
   };
   insertReminder(newReminder).then((id)=>{
     newReminder.id = id;
-    itemList[timeToString(newReminder.date)].push({name: reminder, complete: false, date: new Date(), id:id, category: selectedCat})
+    itemList[timeToString(newReminder.date)].push({name: reminder, complete: false, date: new Date(), id:id, category: selectedCat, user: usernameID})
     this.setState({itemList}) //tampilan di hp
   })
 }
@@ -130,8 +137,8 @@ onChangeReminder =(value) => {
                               <Left>
                                 <View style={{flex:1, flexDirection:'column'}}>
                                   <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}
-                                  onPress={()=>this.props.navigation.navigate('Timer', {itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
-                                  <Text style={{ color: 'grey'}}>{this.getCategoryName(item.category.id)}</Text>
+                                  onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
+                                  <Text style={{ color: 'grey', fontSize:14}}>{this.getCategoryName(item.category.id)}</Text>
                                 </View>
                               </Left>
                               <Right>
