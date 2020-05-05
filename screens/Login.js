@@ -25,17 +25,16 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    login(email, password).then((resp) => {
+    login(email.value, password.value).then((resp) => {
       alert('Login successful');
       setEmail({ value: '', error: ''})
       setPassword({ value: '', error: ''})
       setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
+      navigation.navigate('Main');
     })
     .catch((err) => {
         alert(err);
     })
-
-    navigation.navigate('Main');
   };
 
   const _onSignUpPressed = () =>{
