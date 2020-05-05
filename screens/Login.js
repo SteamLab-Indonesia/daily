@@ -9,11 +9,15 @@ import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { login } from '../libs/database';
+import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache'
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
+
+  let loginHistory = getLatestEmail();
+  console.log('console' + loginHistory)
 
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -25,6 +29,13 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
+    // saveAccount(email.value,password.value){
+
+    // }
+
+    // saveLatestEmail(email.value){
+
+    // }
     login(email.value, password.value).then((resp) => {
       alert('Login successful');
       setEmail({ value: '', error: ''})

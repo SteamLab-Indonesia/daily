@@ -22,12 +22,11 @@ class ReminderList extends Component {
     }
 
 componentDidMount = () =>{
-  // getUser('yvonne.tansu@gmail.com').then((data) => {
-  //   this.setState({usernameID : data.id}) //dalam bentuk apa? user/id? or cmn id?
-  //   console.log(data.id)
-  // })
-  getReminder('qwgjCfFYl9p6P29EFTEJ').then((data) => {
+  getUser('yvonne.tansu@gmail.com').then((data) => {
+    getReminder(data.id).then((data) => {
     this.setState({itemList:data})
+    console.log(data)
+  })
   })
   getCategory().then((data)=>{
     this.setState({category:data})

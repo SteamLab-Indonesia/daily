@@ -17,15 +17,11 @@ export function getUser(username){
 				resolve(null);
 			}
 			else{
-				let data = [];
-				for (let i=0;i< snapshot.docs.length; ++i){
-					let object = {
-						id: snapshot.docs[i].id,
-						user: snapshot.docs[i].data().user,
-					};
-					data.push(object);
-                }
-				resolve(data);
+				let data = {
+					id: snapshot.docs[0].id,
+					user: snapshot.docs[0].data().user,
+				};
+				resolve(data)
 			}
         })
         .catch((err) => reject(err));
@@ -50,8 +46,8 @@ export function reminderMM(time) {
 export function getReminder(usernameID){
 	return new Promise((resolve,reject)=>{
 		reminderCollection
-		.where('user', '==', usersCollection.doc(usernameID)) //brti pas onlineAccounting, user jg ad di chatroom? as reference?
-		.orderBy('timestamp', 'desc')
+		.where('user', '==', usersCollection.doc(usernameID))
+		.orderBy('date', 'desc')
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
