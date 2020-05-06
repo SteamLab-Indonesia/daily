@@ -32,8 +32,9 @@ export function getAccount (email) { //getLatestEmail mau ambil password dari si
 
 export function getLatestEmail () { //simpan login terakhir
     let r = realm.objects('App');
-    console.log(r);
-    return r;
+    if (r.length > 0)
+        return r[0].email
+    return "";
 }
 
 export function saveLatestEmail (email) {

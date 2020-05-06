@@ -7,6 +7,7 @@ import {
     DebugInstructions,
     ReloadInstructions,
   } from 'react-native/Libraries/NewAppScreen';
+  import Background from '../components/background2';
 
 class SplashScreen extends Component {
     componentDidMount = () => { //setelah render baru panggil ini
@@ -18,9 +19,11 @@ class SplashScreen extends Component {
     render(){
         StatusBar.setHidden(true);
         return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:'green' }}>
-          <Text style={styles.sectionTitle}>SyncDo</Text>
-        </View>
+        <Background>
+          {/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:'green' }}>
+            <Text style={styles.sectionTitle}>SyncDo</Text>
+          </View> */}
+        </Background>
         )
     }
 }

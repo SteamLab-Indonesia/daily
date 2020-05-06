@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet, Text, View, Platform, Picker } from "react-native";
 import FusionCharts from "react-native-fusioncharts";
-import {getReminder, getCategory, getStatistics,reminderMM} from  '../libs/database';
+import { getUser, getReminder, getCategory, getStatistics, reminderMM} from  '../libs/database';
 import { List } from 'react-native-paper';
 
 let dataSource = {
@@ -61,8 +61,10 @@ export default class App extends Component {
   }
 
   componentDidMount = ()=>{
-    getReminder().then((data) => {
+    getUser('yvonne.tansu@gmail.com').then((data) => {
+      getReminder(data.id).then((data) => {
       this.setState({itemList:data})
+    })
     })
     getCategory().then((data)=>{
       this.setState({category:data})
@@ -85,11 +87,9 @@ export default class App extends Component {
               style={{ height: 50, width: 150 }}
               // onValueChange = {(event) => this.onChangeCategoryPress(event)}
             >
-              <List.Subheader>2020</List.Subheader>
               {
                 Object.keys(itemList).map((date) =>{
-                  if (reminderMM(date))
-                      return <Picker.Item label={reminderMM(date)}/>
+                  return <Picker.Item label={reminderMM(date)}/>
                 })
               }
           </Picker>

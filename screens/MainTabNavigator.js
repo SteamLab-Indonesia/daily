@@ -3,6 +3,8 @@ import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Reminder from './Reminder';
 import Settings from './Settings';
 import Agenda from './Agenda';
@@ -27,6 +29,8 @@ class MainTabNavigator extends Component{
                       iconName = focused ? 'calendar-month' : 'calendar-month-outline';
                     } else if (route.name === 'Settings') {
                       iconName = focused ? 'settings' : 'settings-outline';
+                    } else if (route.name === 'Report') {
+                      iconName = 'chart-arc'
                     } 
         
                     // You can return any component that you like here!

@@ -208,6 +208,11 @@ export function insertReminder(newData){
 				// Convert to document reference (category collection)
 				newData.category = categoryCollection.doc(newData.category);
 			}
+			if (newData.user)
+			{
+				// Convert to document reference (category collection)
+				newData.user = usersCollection.doc(newData.user);
+			}
 			reminderCollection.add(newData)
 			.then((snapshot) => {
 				console.log(snapshot);

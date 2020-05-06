@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Agenda} from 'react-native-calendars';
-import {getReminder} from '../libs/database'
+import {getUser, getReminder} from '../libs/database'
 
 export default class AgendaScreen extends Component {
   constructor(props) {
@@ -13,9 +13,10 @@ export default class AgendaScreen extends Component {
   }
 
   componentDidMount = () =>{
-    getReminder().then((data) => {
-      console.log(data)
-        this.setState({reminder:data})
+    getUser('yvonne.tansu@gmail.com').then((data) => {
+      getReminder(data.id).then((data) => {
+      this.setState({reminder:data})
+    })
     })
   }
   
@@ -34,20 +35,20 @@ export default class AgendaScreen extends Component {
             height: '100%'
         }}
         theme={{
-            backgroundColor: '#1B2732',
-            calendarBackground: '#1B2732',
+            backgroundColor: '#ffffff',
+            calendarBackground: '#ffffff',
             textSectionTitleColor: '#b6c1cd',
             selectedDayBackgroundColor: '#00adf5',
             selectedDayTextColor: '#ffffff',
             todayTextColor: '#00adf5',
-            dayTextColor: '#bcc6cf',
+            dayTextColor: '#2d4150',
             textDisabledColor: '#d9e1e8',
-            dotColor: '#00adf5',
+            dotColor: 'darkorange',
             selectedDotColor: '#ffffff',
             arrowColor: 'orange',
             disabledArrowColor: '#d9e1e8',
-            monthTextColor: '#8dabc7',
-            indicatorColor: 'blue',
+            monthTextColor: 'blue',
+            indicatorColor: 'orange',
             textDayFontFamily: 'helvetica',
             textMonthFontFamily: 'helvetica',
             textDayHeaderFontFamily: 'helvetica',
@@ -56,7 +57,11 @@ export default class AgendaScreen extends Component {
             textDayHeaderFontWeight: '300',
             textDayFontSize: 16,
             textMonthFontSize: 20,
-            textDayHeaderFontSize: 16
+            textDayHeaderFontSize: 16,
+            agendaDayTextColor: 'brown',
+            agendaDayNumColor: 'darkgreen',
+            agendaTodayColor: 'red',
+            agendaKnobColor: 'blue'
         }}
       />
     );

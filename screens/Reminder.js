@@ -23,6 +23,7 @@ class ReminderList extends Component {
 
 componentDidMount = () =>{
   getUser('yvonne.tansu@gmail.com').then((data) => {
+    this.setState({usernameID:data.id})
     getReminder(data.id).then((data) => {
     this.setState({itemList:data})
     console.log(data)
@@ -116,25 +117,27 @@ onChangeReminder =(value) => {
 
   render() {
       let {itemList, category} = this.state;
+      const windowWidth = Dimensions.get('screen').width;
+      const windowHeight = Dimensions.get('screen').height;
     return (
-        <Container style = {{backgroundColor :'#1B2732'}}>
+        <Container>
           <Content>
             
               {
                 Object.keys(itemList).map((date) =>{
                   return(
                   <List>
-                    <ListItem itemDivider >
-                      <Text>{reminderDate(date)}</Text>
+                    <ListItem itemDivider style={{height:40, borderRadius:10, borderColor:'gray', borderWidth:0.5}}>
+                      <Text style={{fontFamily: 'Roboto'}}>{reminderDate(date)}</Text>
                     </ListItem>
                       {
                       itemList[date].map((item,index)=>{
                           return (
                             //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js
-                          <ListItem key = {index}>
+                          <ListItem key = {index} style={{height:70}}>
                               <Left>
                                 <View style={{flex:1, flexDirection:'column'}}>
-                                  <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#bcc6cf', fontSize : 18}}
+                                  <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
                                   onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
                                   <Text style={{ color: 'grey', fontSize:14}}>{this.getCategoryName(item.category.id)}</Text>
                                 </View>
@@ -151,7 +154,7 @@ onChangeReminder =(value) => {
         <View style={{ flex: 1 }}>
           <Fab
             containerStyle={{ }}
-            style={{ backgroundColor: '#5067FF' }}
+            style={{ backgroundColor: '#579e81' }}
             position="bottomRight"
             onPress={() => this.dialogComponent.show()}>
             <MaterialIcons name='add' />

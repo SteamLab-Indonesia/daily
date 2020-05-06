@@ -29,15 +29,11 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    // saveAccount(email.value,password.value){
+    // saveAccount(email.value,password.value)
 
-    // }
+    // saveLatestEmail(email.value)
 
-    // saveLatestEmail(email.value){
-
-    // }
     login(email.value, password.value).then((resp) => {
-      alert('Login successful');
       setEmail({ value: '', error: ''})
       setPassword({ value: '', error: ''})
       setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
@@ -80,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
         <CheckBox checked={checkboxPress.value} onPress={()=>setCheckboxPress({value:!value, error: ''})}/>
-        <Text>Remember Me</Text>
+        <Text style={{color:'white'}}>Remember Me</Text>
       <Button title="Login" onPress={_onLoginPressed} />
       <Button title="New User? SIGN UP" onPress={_onSignUpPressed} />
       {/* <View style={styles.forgotPassword}>

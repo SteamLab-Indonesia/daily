@@ -8,21 +8,30 @@ import {
 } from 'react-native';
 
 import SettingsList from 'react-native-settings-list';
+import { Switch } from 'react-native-paper';
 
 
 class Settings extends Component {
+
+  state = {
+    isSwitchOn: false,
+  };
+
+  _onToggleSwitch = () => this.setState(state => ({ isSwitchOn: !state.isSwitchOn }));
+
   render() {
+    const { isSwitchOn } = this.state;
     return (
-      <View style={{backgroundColor:'#65798c',flex:1}}>
-        <View style={{borderBottomWidth:1, backgroundColor:'#263238',borderColor:'#65798c'}}>
-          <Text style={{color:'white',marginTop:15,marginBottom:15, marginLeft:15,fontWeight:'bold',fontSize:20}}>Settings</Text>
+      <View style={{flex:1}}>
+        <View style={{borderBottomWidth:1 ,borderColor:'#65798c'}}>
+          <Text style={{color:'black',marginTop:15,marginBottom:15, marginLeft:15,fontWeight:'bold',fontSize:20}}>Settings</Text>
         </View>
-        <View style={{backgroundColor:'#65798c',flex:1}}>
-          <SettingsList backgroundColor= '#1B2732' borderColor='#65798c' defaultItemSize={50}>
+        <View style={{flex:1}}>
+          <SettingsList borderColor='black' defaultItemSize={50}>
             <SettingsList.Item
               hasNavArrow={false}
               title='Wireless & networks'
-              titleStyle={{color:'#009688', marginBottom:10, fontWeight:'bold', fontSize:16}}
+              titleStyle={{color:'black', marginBottom:10, fontWeight:'bold', fontSize:16}}
               itemWidth={50}
               borderHide={'Both'}
             />
@@ -34,7 +43,7 @@ class Settings extends Component {
               }
               hasNavArrow={false}
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               title='Data usage'
             />
             <SettingsList.Item
@@ -45,13 +54,13 @@ class Settings extends Component {
               }
               title='More'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Item
               hasNavArrow={false}
               title='Device'
-              titleStyle={{color:'#009688', marginBottom:10, fontWeight:'bold', fontSize:16}}
+              titleStyle={{color:'black', marginBottom:10, fontWeight:'bold', fontSize:16}}
               itemWidth={70}
               borderHide={'Both'}
             />
@@ -63,7 +72,7 @@ class Settings extends Component {
               }
               title='Display'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Item
@@ -74,7 +83,7 @@ class Settings extends Component {
               }
               title='Sound & notification'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Item
@@ -83,10 +92,14 @@ class Settings extends Component {
                   <Image style={{alignSelf:'center',height:22, width:14}} source={require('../images/apps.png')}/>
                 </View>
               }
-              title='Apps'
+              title='Dark Mode'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
+            />
+            <Switch
+                value={isSwitchOn}
+                onValueChange={this._onToggleSwitch}
             />
             <SettingsList.Item
               icon={
@@ -96,7 +109,7 @@ class Settings extends Component {
               }
               title='Storage & USB'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Item
@@ -107,7 +120,7 @@ class Settings extends Component {
               }
               title='Battery'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Item
@@ -118,7 +131,7 @@ class Settings extends Component {
               }
               title='Memory'
               itemWidth={70}
-              titleStyle={{color:'lightgray', fontSize: 16}}
+              titleStyle={{color:'black', fontSize: 16}}
               hasNavArrow={false}
             />
             <SettingsList.Header headerStyle={{marginTop: -5}}/>
