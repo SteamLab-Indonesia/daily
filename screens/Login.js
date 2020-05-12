@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { CheckBox , View, Left } from 'native-base';
 import Background from '../components/Background';
@@ -19,24 +19,19 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState({ value: '', error: '' });
   const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
   
-  let latestEmail = getLatestEmail();
+  useEffect(() => {
+    let latestEmail = getLatestEmail();
 
-  if(latestEmail != ''){
-    let account = getAccount(latestEmail);
-    if (account)
-    {
-      doLogin(latestEmail,account.password)
+    if(latestEmail != ''){
+      let account = getAccount(latestEmail);
+      if (account)
+      {
+        setEmail({ value: latestEmail, error: ''});
+        setPassword({ value: account.password, error: ''})    ;    
+        doLogin(latestEmail,account.password);
+      }
     }
-  }
-  // async function requestUserPermission() {
-  //   const settings = await messaging().requestPermission();
-
-  //   if (settings) {
-  //     console.log('Permission settings:', settings);
-  //   }
-  // }
-  
-  // requestUserPermission()
+  },[])
 
   const doLogin = (email,password) => {
     login(email, password).then((resp) => {

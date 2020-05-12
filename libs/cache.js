@@ -20,13 +20,13 @@ App.schema = {
     },
 };
 
-const realm = new Realm({schema: [Account,App], schemaVersion:2 }); //updates
+const realm = new Realm({schema: [Account,App], schemaVersion:3 }); //updates
 
 export function getAccount (email) { //getLatestEmail mau ambil password dari sini
+
     if(email){
         let r = realm.objects('Account').filtered('email ="' + email + '"');
-        console.log(r);
-        return r;
+        return {email: r[0].email, password: r[0].password};
     }
     return null
 }
@@ -48,6 +48,8 @@ export function saveLatestEmail (email) {
 }
 
 export function saveAccount (email,password) { //simpan di realm
+
+    console.log('save account: ', email, password);
     // Write
     realm.write(() => {
         realm.create('Account', {
