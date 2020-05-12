@@ -43,8 +43,8 @@ export function saveLatestEmail (email) {
         realm.create('App', {
             email: email,
             id: 0
-        });
-    },true);
+        },true);
+    });
 }
 
 export function saveAccount (email,password) { //simpan di realm

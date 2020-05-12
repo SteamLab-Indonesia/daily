@@ -7,6 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
 import {getUser, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
+import { getLatestEmail } from '../libs/cache';
 
 
 class ReminderList extends Component {
@@ -22,7 +23,7 @@ class ReminderList extends Component {
     }
 
 componentDidMount = () =>{
-  getUser('yvonne.tansu@gmail.com').then((data) => {
+  getUser(getLatestEmail()).then((data) => {
     this.setState({usernameID:data.id})
     getReminder(data.id).then((data) => {
     this.setState({itemList:data})

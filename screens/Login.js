@@ -10,6 +10,7 @@ import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { login } from '../libs/database';
 import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache';
+import { acc } from 'react-native-reanimated';
 // import messaging from '@react-native-firebase/messaging';
 
 const LoginScreen = ({ navigation }) => {
@@ -18,6 +19,15 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState({ value: '', error: '' });
   const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
   
+  let latestEmail = getLatestEmail();
+
+  if(latestEmail != ''){
+    let account = getAccount(latestEmail);
+    if (account)
+    {
+      doLogin(latestEmail,account.password)
+    }
+  }
   // async function requestUserPermission() {
   //   const settings = await messaging().requestPermission();
 
@@ -28,6 +38,20 @@ const LoginScreen = ({ navigation }) => {
   
   // requestUserPermission()
 
+  const doLogin = (email,password) => {
+    login(email, password).then((resp) => {
+      saveAccount(email,password)
+      saveLatestEmail(email)
+      setEmail({ value: '', error: ''})
+      setPassword({ value: '', error: ''})
+      setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
+      navigation.navigate('Main');
+    })
+    .catch((err) => {
+        alert(err);
+    })
+  }
+
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
@@ -37,21 +61,7 @@ const LoginScreen = ({ navigation }) => {
       setPassword({ ...password, error: passwordError });
       return;
     }
-
-    saveAccount(email.value,password.value)
-
-    saveLatestEmail(email.value)
-    console.log('email: '+ getLatestEmail())
-
-    login(email.value, password.value).then((resp) => {
-      setEmail({ value: '', error: ''})
-      setPassword({ value: '', error: ''})
-      setCheckboxPress({ value: false, error: ''}) //need these 3 lines?
-      navigation.navigate('Main');
-    })
-    .catch((err) => {
-        alert(err);
-    })
+    doLogin(email.value,password.value)
   };
 
   const _onSignUpPressed = () =>{
