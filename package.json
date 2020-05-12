@@ -40,6 +40,7 @@
     "react-native-screens": "^2.4.0",
     "react-native-settings-list": "^1.8.0",
     "react-native-svg": "^12.1.0",
+    "react-native-vector-icons": "^6.6.0",
     "react-native-webview": "^9.4.0",
     "react-native-wheel-picker-android": "^2.0.6",
     "realm": "^5.0.4"
