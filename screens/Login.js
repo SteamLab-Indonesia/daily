@@ -9,15 +9,24 @@ import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
 import { login } from '../libs/database';
-import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache'
+import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache';
+// import messaging from '@react-native-firebase/messaging';
 
 const LoginScreen = ({ navigation }) => {
+  
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
+  
+  // async function requestUserPermission() {
+  //   const settings = await messaging().requestPermission();
 
-  let loginHistory = getLatestEmail();
-  console.log('console' + loginHistory)
+  //   if (settings) {
+  //     console.log('Permission settings:', settings);
+  //   }
+  // }
+  
+  // requestUserPermission()
 
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -29,9 +38,10 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    // saveAccount(email.value,password.value)
+    saveAccount(email.value,password.value)
 
-    // saveLatestEmail(email.value)
+    saveLatestEmail(email.value)
+    console.log('email: '+ getLatestEmail())
 
     login(email.value, password.value).then((resp) => {
       setEmail({ value: '', error: ''})

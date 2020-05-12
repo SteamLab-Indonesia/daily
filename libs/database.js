@@ -7,6 +7,28 @@ const categoryCollection = firestore().collection('category');
 const statisticsCollection = firestore().collection('statistics');
 const usersCollection = firestore().collection('user');
 
+export function createUser(username,password) {
+	return new Promise((resolve, reject) => {
+		auth().createUserWithEmailAndPassword(username, password).then(() => {
+			resolve('success');
+		}).catch((err)=>reject(err));
+	})
+}
+
+export function addUserDatabase(newData) {
+	return new Promise((resolve,reject)=>{
+		if(newData){
+			usersCollection
+			.add(newData)
+			.then((snapshot) => {
+				resolve(snapshot)
+			})
+			.catch((err) => reject(err));
+		}
+		
+  })
+}
+
 export function getUser(username){
 	return new Promise((resolve,reject)=>{
 		usersCollection

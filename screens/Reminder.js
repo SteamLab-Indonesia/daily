@@ -139,7 +139,7 @@ onChangeReminder =(value) => {
                                 <View style={{flex:1, flexDirection:'column'}}>
                                   <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
                                   onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
-                                  <Text style={{ color: 'grey', fontSize:14}}>{this.getCategoryName(item.category.id)}</Text>
+                                  <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryName(item.category.id)}</Text>
                                 </View>
                               </Left>
                               <Right>

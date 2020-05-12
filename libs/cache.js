@@ -3,7 +3,7 @@ const Realm = require('realm');
 class Account {}
 Account.schema = {
     name: 'Account',
-    primaryKey: 'email',
+    primaryKey: 'email', //untuk blokir email yg sama, unique data
     properties: {
         email: 'string',
         password: 'string',
@@ -13,13 +13,14 @@ Account.schema = {
 class App {}
 App.schema = {
     name: 'App',
-    primaryKey: 'email',
+    primaryKey: 'id', 
     properties: {
         email: 'string',
+        id: 'int'
     },
 };
 
-const realm = new Realm({schema: [Account,App], schemaVersion:1 }); //updates
+const realm = new Realm({schema: [Account,App], schemaVersion:2 }); //updates
 
 export function getAccount (email) { //getLatestEmail mau ambil password dari sini
     if(email){
@@ -41,8 +42,9 @@ export function saveLatestEmail (email) {
     realm.write(() => {
         realm.create('App', {
             email: email,
+            id: 0
         });
-    });
+    },true);
 }
 
 export function saveAccount (email,password) { //simpan di realm
@@ -51,6 +53,6 @@ export function saveAccount (email,password) { //simpan di realm
         realm.create('Account', {
             email: email,
             password: password,
-        });
+        },true);
     });
 }

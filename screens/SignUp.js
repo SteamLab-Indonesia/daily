@@ -6,22 +6,33 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
-import { emailValidator, passwordValidator } from '../core/utils';
+import { emailValidator, passwordValidator , confirmPasswordValidator , nameValidator } from '../core/utils';
+import { createUser , addUserDatabase } from '../libs/database';
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
+  const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [name, setName] = useState({ value: '', error: '' });
 
   const _onSignUpPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
+    const confirmPasswordError = confirmPasswordValidator(password.value,confirmPassword.value);
+    const nameError = nameValidator(name.value)
 
-    if (emailError || passwordError) {
+    if (emailError || passwordError || confirmPasswordError || nameError) {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
+      setConfirmPassword({ ...confirmPassword, error: confirmPasswordError });
+      setName({ ...name, error: nameError });
       return;
     }
+
+    createUser(email.value,password.value).then(()=>{
+      addUserDatabase({user:email.value,name:name.value})
+    }
+    )
 
     navigation.navigate('Main');
   };
@@ -63,32 +74,16 @@ const SignUpScreen = ({ navigation }) => {
       />
       {/* //password confirmation */}
       <TextInput
-        label="Password"
+        label="Re-type Password"
         returnKeyType="done"
-        value={password.value}
-        onChangeText={text => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
+        value={confirmPassword.value}
+        onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+        error={!!confirmPassword.error}
+        errorText={confirmPassword.error}
         secureTextEntry
       />
 
-      <Button title="SignUp" onPress={_onSignUpPressed} />
-      {/* <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPasswordScreen')}
-        >
-          <Text style={styles.label}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View>
-
-      
-
-      <View style={styles.row}>
-        <Text style={styles.label}>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
-        </TouchableOpacity>
-      </View> */}
+      <Button title="Create New Account" onPress={_onSignUpPressed} />
     </Background>
   );
 };
