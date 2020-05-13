@@ -197,6 +197,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:*'
 
+    implementation project(path: ":@react-native-firebase_messaging")
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
 import { CheckBox , View, Left } from 'native-base';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -11,7 +11,7 @@ import { emailValidator, passwordValidator } from '../core/utils';
 import { login } from '../libs/database';
 import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache';
 import { acc } from 'react-native-reanimated';
-// import messaging from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 
 const LoginScreen = ({ navigation }) => {
   
@@ -26,9 +26,14 @@ const LoginScreen = ({ navigation }) => {
       let account = getAccount(latestEmail);
       if (account)
       {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+          Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        });
+
         setEmail({ value: latestEmail, error: ''});
         setPassword({ value: account.password, error: ''})    ;    
-        doLogin(latestEmail,account.password);
+        //doLogin(latestEmail,account.password);
+        return unsubscribe;
       }
     }
   },[])
