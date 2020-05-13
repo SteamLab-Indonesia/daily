@@ -30,6 +30,10 @@ const LoginScreen = ({ navigation }) => {
           Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
         });
 
+        messaging().setBackgroundMessageHandler(async remoteMessage => {
+          console.log('Message handled in the background!', remoteMessage);
+        });
+        
         setEmail({ value: latestEmail, error: ''});
         setPassword({ value: account.password, error: ''})    ;    
         //doLogin(latestEmail,account.password);
