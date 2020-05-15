@@ -88,16 +88,15 @@ export default class App extends Component {
       console.log("===> GET STATS");
       console.log(data);
       for (let i=0;i<category.length;i++){
-        let obj = data.filter((item) => item.category == category[i].id)
+        let obj = data.filter((item) => item.category.id == category[i].id)
           if (obj.length > 0){
             dataSource.data.push({
               label: category[i].listCat,
               value: obj[0].duration
             })
-            
           }
       }
-      console.log(dataSource);
+      console.log('get stats',dataSource);
       this.setState({dataSource,statistics:data, selectedMonth: value })
     })
     
