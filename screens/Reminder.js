@@ -23,16 +23,22 @@ class ReminderList extends Component {
     }
 
 componentDidMount = () =>{
-  getUser(getLatestEmail()).then((data) => {
-    this.setState({usernameID:data.id})
-    getReminder(data.id).then((data) => {
-    this.setState({itemList:data})
-    console.log(data)
-  })
-  })
-  getCategory().then((data)=>{
-    this.setState({category:data})
-  })
+	getUser(getLatestEmail()).then((data) => {
+		if (data)
+		{
+			this.setState({usernameID:data.id})
+			getReminder(data.id).then((data) => {
+				if (data)
+				{
+					this.setState({itemList:data})
+					console.log(data)
+				}
+			})
+		}
+	})
+	getCategory().then((data)=>{
+		this.setState({category:data})
+	})
 }
 
 checkboxPress = (key,index) => {
@@ -125,7 +131,7 @@ onChangeReminder =(value) => {
           <Content>
             
               {
-                Object.keys(itemList).map((date) =>{
+                itemList && Object.keys(itemList).map((date) =>{
                   return(
                   <List>
                     <ListItem itemDivider style={{height:40, borderRadius:10, borderColor:'gray', borderWidth:0.5}}>
