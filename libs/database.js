@@ -121,14 +121,18 @@ export function getCategory(){
   })
 }
 
-export function getStatistics(month,year){
-	// if(typeof category != 'object')
-	// 	category = categoryCollection.doc(category);
+export function getStatistics(month,year, category){
+	if(typeof category != 'object')
+		category = categoryCollection.doc(category);
 	return new Promise((resolve,reject)=>{
-		statisticsCollection
+		let query = statisticsCollection
 		.where('month', '==', month)
-		.where('year', '==', year)
-		.get()
+		.where('year', '==', year);
+
+		if (category != null)
+			query = query.where('category', '==', category);
+		
+		query.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
