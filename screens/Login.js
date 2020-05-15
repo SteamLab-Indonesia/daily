@@ -19,31 +19,29 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState({ value: '', error: '' });
   const [checkboxPress, setCheckboxPress] = useState({ value: false , error: '' });
   
-  useEffect(() => {
+  useEffect(() => { //compenentdidmount, dijalankan skali
     let latestEmail = getLatestEmail();
 
     if(latestEmail != ''){
       let account = getAccount(latestEmail);
       if (account)
       {
-        const unsubscribe = messaging().onMessage(async remoteMessage => {
-          Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-        });
-
-        messaging().setBackgroundMessageHandler(async remoteMessage => {
-          console.log('Message handled in the background!', remoteMessage);
-        });
-        
         setEmail({ value: latestEmail, error: ''});
         setPassword({ value: account.password, error: ''})    ;    
-        //doLogin(latestEmail,account.password);
-        return unsubscribe;
+        doLogin(latestEmail,account.password);
       }
     }
   },[])
 
   const doLogin = (email,password) => {
     login(email, password).then((resp) => {
+      messaging().onMessage(async remoteMessage => {
+          Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        });
+
+      messaging().setBackgroundMessageHandler(async remoteMessage => {
+          console.log('Message handled in the background!', remoteMessage);
+        });
       saveAccount(email,password)
       saveLatestEmail(email)
       setEmail({ value: '', error: ''})

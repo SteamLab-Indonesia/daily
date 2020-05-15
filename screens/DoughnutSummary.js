@@ -51,7 +51,9 @@ export default class App extends Component {
       dataSource,
       statistics:[],
       category:[],
-      itemList:[]
+      itemList:[],
+      year: 2020,
+      month: 4,
     }
 
     this.libraryPath = Platform.select({
@@ -69,14 +71,29 @@ export default class App extends Component {
     getCategory().then((data)=>{
       this.setState({category:data})
     })
-    getStatistics().then((data)=>{
-      this.setState({statistics:data})
+  }
+
+  updateStatistics = () => {
+    let {category,year,month,dataSource} = this.state;
+    dataSource.data =[]
+    getStatistics(month,year).then((data)=>{
+      for (let i=0;i<category.length;i++){
+        let obj = data.filter((item) => item.category == category[i].id)
+          if (obj.length > 0){
+            dataSource.push({
+              label: category[i].listCat,
+              value: obj[0].duration
+            })
+            this.setState({dataSource,statistics:data})
+          }
+      }
     })
+    
   }
 
   render() {
     dataSource.chart.subcaption = 'May 2020'
-    let {itemList,category,statistics} = this.state
+    let {itemList,category,statistics,dataSource} = this.state
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>
@@ -85,7 +102,7 @@ export default class App extends Component {
         <Picker
               selectedValue={this.state.selectedMonthYear}
               style={{ height: 50, width: 150 }}
-              // onValueChange = {(event) => this.onChangeCategoryPress(event)}
+              onValueChange = {() => this.updateStatistics()}
             >
               {
                 Object.keys(itemList).map((date) =>{

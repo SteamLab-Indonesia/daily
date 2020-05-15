@@ -121,30 +121,35 @@ export function getCategory(){
   })
 }
 
-export function getStatistics(month,year,category){
+export function getStatistics(month,year){
 	if(typeof category != 'object')
 		category = categoryCollection.doc(category);
 	return new Promise((resolve,reject)=>{
 		statisticsCollection
 		.where('month', '==', month)
 		.where('year', '==', year)
-		.where('category', '==',category)
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
 			}
 			else{
-				let duration= snapshot.docs[0].data().duration;
-				if (!duration){
-					duration = 0;
+				
+				let data = [];
+				for (let i=0;i< snapshot.docs.length; ++i){
+					let duration= snapshot.docs[i].data().duration;
+					if (!duration){
+						duration = 0;
+					}
+					let object ={
+						id: snapshot.docs[i].id,
+						month: snapshot.docs[i].data().month,
+						category: snapshot.docs[i].data().category,
+						year: snapshot.docs[i].data().year,
+						duration
+					};
+					data.push(object)
 				}
-				let data = {
-					id: snapshot.docs[0].id,
-					month: snapshot.docs[0].data().month,
-					category: snapshot.docs[0].data().category,
-					duration
-				};
 				resolve(data);
 			}
         })
