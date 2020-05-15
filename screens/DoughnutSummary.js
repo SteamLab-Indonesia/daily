@@ -43,6 +43,12 @@ let dataSource = {
   ]
 };
 
+let month = [
+  'January', 'February', 'March', 'April', 
+  'May', 'June', 'July', 'August', 
+  'September','October', 'November', 'December'
+];
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -54,6 +60,7 @@ export default class App extends Component {
       itemList:[],
       year: 2020,
       month: 4,
+      selectedMonth: 1
     }
 
     this.libraryPath = Platform.select({
@@ -73,40 +80,47 @@ export default class App extends Component {
     })
   }
 
-  updateStatistics = () => {
+  updateStatistics = (value, index) => {
+    console.log('===> UPDATE STATS value: ', value, 'index:', index)
     let {category,year,month,dataSource} = this.state;
     dataSource.data =[]
     getStatistics(month,year).then((data)=>{
+      console.log("===> GET STATS");
+      console.log(data);
       for (let i=0;i<category.length;i++){
         let obj = data.filter((item) => item.category == category[i].id)
           if (obj.length > 0){
-            dataSource.push({
+            dataSource.data.push({
               label: category[i].listCat,
               value: obj[0].duration
             })
-            this.setState({dataSource,statistics:data})
+            
           }
       }
+      console.log(dataSource);
+      this.setState({dataSource,statistics:data, selectedMonth: value })
     })
     
   }
 
   render() {
+    let {itemList,category,statistics,dataSource} = this.state;
     dataSource.chart.subcaption = 'May 2020'
-    let {itemList,category,statistics,dataSource} = this.state
+    console.log("===> RENDER");
+    console.log(dataSource);
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>
           SUMMARY
         </Text>
         <Picker
-              selectedValue={this.state.selectedMonthYear}
+              selectedValue={this.state.selectedMonth}
               style={{ height: 50, width: 150 }}
-              onValueChange = {() => this.updateStatistics()}
+              onValueChange = {(value, index) => this.updateStatistics(value, index)}
             >
               {
-                Object.keys(itemList).map((date) =>{
-                  return <Picker.Item label={reminderMM(date)}/>
+                month.map((item, index) =>{
+                  return <Picker.Item label={item} value={index+1}/>
                 })
               }
           </Picker>

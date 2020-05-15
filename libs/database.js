@@ -122,8 +122,8 @@ export function getCategory(){
 }
 
 export function getStatistics(month,year){
-	if(typeof category != 'object')
-		category = categoryCollection.doc(category);
+	// if(typeof category != 'object')
+	// 	category = categoryCollection.doc(category);
 	return new Promise((resolve,reject)=>{
 		statisticsCollection
 		.where('month', '==', month)
