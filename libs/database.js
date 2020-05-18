@@ -122,15 +122,19 @@ export function getCategory(){
 }
 
 export function getStatistics(month,year, category){
-	if(typeof category != 'object')
+	// If category not empty and isn't reference or object
+	if(category && typeof category != 'object')
 		category = categoryCollection.doc(category);
+
 	return new Promise((resolve,reject)=>{
 		let query = statisticsCollection
 		.where('month', '==', month)
 		.where('year', '==', year);
 
 		if (category != null)
+		{
 			query = query.where('category', '==', category);
+		}
 		
 		query.get()
 		.then((snapshot) => {

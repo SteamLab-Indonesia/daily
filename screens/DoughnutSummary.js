@@ -20,26 +20,7 @@ let dataSource = {
     theme: "fusion"
   },
   data: [
-    {
-      label: "Ice Cream Sandwich",
-      value: "1000"
-    },
-    {
-      label: "Jelly Bean",
-      value: "5300"
-    },
-    {
-      label: "Kitkat",
-      value: "10500"
-    },
-    {
-      label: "Lollipop",
-      value: "18900"
-    },
-    {
-      label: "Marshmallow",
-      value: "17904"
-    }
+    
   ]
 };
 
@@ -80,33 +61,31 @@ export default class App extends Component {
     })
   }
 
-  updateStatistics = (value, index) => {
-    console.log('===> UPDATE STATS value: ', value, 'index:', index)
-    let {category,year,month,dataSource} = this.state;
-    dataSource.data =[]
-    getStatistics(month,year).then((data)=>{
-      console.log("===> GET STATS");
-      console.log(data);
-      for (let i=0;i<category.length;i++){
-        let obj = data.filter((item) => item.category.id == category[i].id)
-          if (obj.length > 0){
-            dataSource.data.push({
-              label: category[i].listCat,
-              value: obj[0].duration
-            })
-          }
-      }
-      console.log('get stats',dataSource);
-      this.setState({dataSource,statistics:data, selectedMonth: value })
-    })
-    
-  }
+	updateStatistics = (value, index) => {
+		console.log('===> UPDATE STATS value: ', value, 'index:', index)
+		let {category,year,dataSource} = this.state;
+		dataSource.data =[]
+		dataSource.chart.subcaption = month[index] + ' ' + this.state.year;
+		getStatistics(value, year).then((data)=>{
+			// Make sure has data statistic
+			if (data)
+			{
+				for (let i=0;i<category.length;i++){
+				let obj = data.filter((item) => item.category.id == category[i].id)
+					if (obj.length > 0){
+						dataSource.data.push({
+							label: category[i].listCat,
+							value: obj[0].duration
+						})
+					}
+				}
+			}
+			this.setState({dataSource, selectedMonth: value })
+		})
+	}
 
   render() {
-    let {itemList,category,statistics,dataSource} = this.state;
-    dataSource.chart.subcaption = 'May 2020'
-    console.log("===> RENDER");
-    console.log(dataSource);
+    let {dataSource} = this.state;
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>
