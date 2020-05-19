@@ -16,11 +16,12 @@ App.schema = {
     primaryKey: 'id', 
     properties: {
         email: 'string',
+        userID: 'string',
         id: 'int'
     },
 };
 
-const realm = new Realm({schema: [Account,App], schemaVersion:3 }); //updates
+const realm = new Realm({schema: [Account,App], schemaVersion:4 }); //updates
 
 export function getAccount (email) { //getLatestEmail mau ambil password dari sini
 
@@ -38,10 +39,18 @@ export function getLatestEmail () { //simpan login terakhir
     return "";
 }
 
-export function saveLatestEmail (email) {
+export function getLatestUserID () { //simpan login terakhir
+    let r = realm.objects('App');
+    if (r.length > 0)
+        return r[0].userID
+    return "";
+}
+
+export function saveLatestEmail (email,userID) {
     realm.write(() => {
         realm.create('App', {
             email: email,
+            userID: userID,
             id: 0
         },true);
     });

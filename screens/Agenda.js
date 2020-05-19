@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import {getUser, getReminder} from '../libs/database'
+import { getLatestUserID } from '../libs/cache';
 
 export default class AgendaScreen extends Component {
   constructor(props) {
@@ -13,10 +14,8 @@ export default class AgendaScreen extends Component {
   }
 
   componentDidMount = () =>{
-    getUser('yvonne.tansu@gmail.com').then((data) => {
-      getReminder(data.id).then((data) => {
+    getReminder(getLatestUserID()).then((data) => {
       this.setState({reminder:data})
-    })
     })
   }
   

@@ -97,9 +97,12 @@ export function getReminder(usernameID){
   })
 }
 
-export function getCategory(){
+export function getCategory(userID){
+	if(userID && typeof userID != 'object')
+		userID = usersCollection.doc(userID);
 	return new Promise((resolve,reject)=>{
 		categoryCollection.get()
+		.where ('user', '==', userID)
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
@@ -110,7 +113,8 @@ export function getCategory(){
 					let object = {
 						id: snapshot.docs[i].id,
 						listCat: snapshot.docs[i].data().listCat,
-						color: snapshot.docs[i].data().color
+						color: snapshot.docs[i].data().color,
+						user: snapshot.docs[i].data().user
 					};
 					data.push(object);
                 }
@@ -121,15 +125,18 @@ export function getCategory(){
   })
 }
 
-export function getStatistics(month,year, category){
+export function getStatistics(userID, month,year, category){
 	// If category not empty and isn't reference or object
 	if(category && typeof category != 'object')
 		category = categoryCollection.doc(category);
+	if(userID && typeof userID != 'object')
+		userID = usersCollection.doc(userID);
 
 	return new Promise((resolve,reject)=>{
 		let query = statisticsCollection
 		.where('month', '==', month)
-		.where('year', '==', year);
+		.where('year', '==', year)
+		.where('user', '==', userID)
 
 		if (category != null)
 		{
@@ -154,7 +161,8 @@ export function getStatistics(month,year, category){
 						month: snapshot.docs[i].data().month,
 						category: snapshot.docs[i].data().category,
 						year: snapshot.docs[i].data().year,
-						duration
+						duration,
+						user: snapshot.docs[i].data().user
 					};
 					data.push(object)
 				}
@@ -174,6 +182,15 @@ export function addStatistics(newData){
 				// Convert to document reference (category collection)
 				{
 					newData.category = categoryCollection.doc(newData.category);
+				}
+			}
+		if (newData.user)
+			{
+				//if category is string (not object), then need conversion
+				if(typeof newData.user != 'object')
+				// Convert to document reference (category collection)
+				{
+					newData.user = usersCollection.doc(newData.user);
 				}
 			}
 		statisticsCollection

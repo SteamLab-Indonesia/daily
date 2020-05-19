@@ -8,7 +8,7 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { theme } from '../core/theme';
 import { emailValidator, passwordValidator } from '../core/utils';
-import { login } from '../libs/database';
+import { login, getUser } from '../libs/database';
 import { getAccount, getLatestEmail, saveLatestEmail, saveAccount} from '../libs/cache';
 import { acc } from 'react-native-reanimated';
 import messaging from '@react-native-firebase/messaging';
@@ -42,8 +42,10 @@ const LoginScreen = ({ navigation }) => {
       messaging().setBackgroundMessageHandler(async remoteMessage => {
           console.log('Message handled in the background!', remoteMessage);
         });
+      getUser(email).then((data)=>{
+        saveLatestEmail(email,data.id)
+      })
       saveAccount(email,password)
-      saveLatestEmail(email)
       setEmail({ value: '', error: ''})
       setPassword({ value: '', error: ''})
       setCheckboxPress({ value: false, error: ''}) //need these 3 lines?

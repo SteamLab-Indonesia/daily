@@ -3,7 +3,7 @@ import { AppRegistry, StyleSheet, Text, View, Platform, Picker } from "react-nat
 import FusionCharts from "react-native-fusioncharts";
 import { getUser, getReminder, getCategory, getStatistics, reminderMM} from  '../libs/database';
 import { List } from 'react-native-paper';
-import { getLatestEmail } from '../libs/cache';
+import { getLatestEmail, getLatestUserID } from '../libs/cache';
 
 let dataSource = {
   chart: {
@@ -30,6 +30,7 @@ let month = [
   'May', 'June', 'July', 'August', 
   'September','October', 'November', 'December'
 ];
+let year = [new Date().getFullYear()-1,new Date().getFullYear()]
 
 export default class App extends Component {
   constructor(props) {
@@ -51,18 +52,12 @@ export default class App extends Component {
   }
 
   componentDidMount = ()=>{
-
-    getUser(getLatestEmail()).then((data) => {
-
-      getCategory().then((data)=>{
+      getCategory(getLatestUserID()).then((data)=>{
         this.setState({category:data})
 
         let {year, selectedMonth} = this.state;
         this.updateStatistics(selectedMonth, selectedMonth-1);        
       });
-
-    })
-
   }
 
 	updateStatistics = (value, index) => {

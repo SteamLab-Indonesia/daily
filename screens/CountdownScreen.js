@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { View, Animated, Button, Text } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import {getStatistics, updateStatistics, addStatistics} from '../libs/database'
+import { getLatestUserID } from '../libs/cache'
 
 class CountdownScreen extends Component {
     state={
@@ -41,7 +42,7 @@ class CountdownScreen extends Component {
         let year = date.getFullYear();
         let month = date.getMonth()+1;
         console.log(date)
-        getStatistics(month,year,itemCategory).then((data)=>{
+        getStatistics(getLatestUserID(), month,year,itemCategory).then((data)=>{
             if(data)
                 {
                     let duration = data.duration + this.convertToSeconds();
@@ -50,7 +51,7 @@ class CountdownScreen extends Component {
             else
             {
                 let duration = this.convertToSeconds()
-                addStatistics({year,month,category:itemCategory,duration})
+                addStatistics({year,month,category:itemCategory,duration,user:getLatestUserID()})
             }
                 
         })
