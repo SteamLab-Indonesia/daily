@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { AppRegistry, StyleSheet, Text, View, Platform, Picker } from "react-native";
 import FusionCharts from "react-native-fusioncharts";
 import { getUser, getReminder, getCategory, getStatistics, reminderMM} from  '../libs/database';
-import { List } from 'react-native-paper';
 import { getLatestEmail, getLatestUserID } from '../libs/cache';
 
 let dataSource = {
@@ -64,8 +63,9 @@ export default class App extends Component {
 		let {category,year,dataSource} = this.state;
 		dataSource.data =[]
 		dataSource.chart.subcaption = month[index] + ' ' + this.state.year;
-		getStatistics(value, year).then((data)=>{
+		getStatistics(getLatestUserID(),value, year).then((data)=>{
       // Make sure has data statistic
+      console.log(data)
 			if (data)
 			{
 				for (let i=0;i<category.length;i++){

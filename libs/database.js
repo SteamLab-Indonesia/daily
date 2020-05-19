@@ -101,8 +101,9 @@ export function getCategory(userID){
 	if(userID && typeof userID != 'object')
 		userID = usersCollection.doc(userID);
 	return new Promise((resolve,reject)=>{
-		categoryCollection.get()
+		categoryCollection
 		.where ('user', '==', userID)
+		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
 				resolve(null);
