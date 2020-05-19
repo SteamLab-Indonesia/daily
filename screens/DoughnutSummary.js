@@ -3,6 +3,7 @@ import { AppRegistry, StyleSheet, Text, View, Platform, Picker } from "react-nat
 import FusionCharts from "react-native-fusioncharts";
 import { getUser, getReminder, getCategory, getStatistics, reminderMM} from  '../libs/database';
 import { List } from 'react-native-paper';
+import { getLatestEmail } from '../libs/cache';
 
 let dataSource = {
   chart: {
@@ -38,10 +39,9 @@ export default class App extends Component {
       dataSource,
       statistics:[],
       category:[],
-      itemList:[],
       year: 2020,
       month: 4,
-      selectedMonth: 1
+      selectedMonth: new Date().getMonth()+1
     }
 
     this.libraryPath = Platform.select({
@@ -51,14 +51,18 @@ export default class App extends Component {
   }
 
   componentDidMount = ()=>{
-    getUser('yvonne.tansu@gmail.com').then((data) => {
-      getReminder(data.id).then((data) => {
-      this.setState({itemList:data})
+
+    getUser(getLatestEmail()).then((data) => {
+
+      getCategory().then((data)=>{
+        this.setState({category:data})
+
+        let {year, selectedMonth} = this.state;
+        this.updateStatistics(selectedMonth, selectedMonth-1);        
+      });
+
     })
-    })
-    getCategory().then((data)=>{
-      this.setState({category:data})
-    })
+
   }
 
 	updateStatistics = (value, index) => {
@@ -67,7 +71,7 @@ export default class App extends Component {
 		dataSource.data =[]
 		dataSource.chart.subcaption = month[index] + ' ' + this.state.year;
 		getStatistics(value, year).then((data)=>{
-			// Make sure has data statistic
+      // Make sure has data statistic
 			if (data)
 			{
 				for (let i=0;i<category.length;i++){
@@ -79,7 +83,7 @@ export default class App extends Component {
 						})
 					}
 				}
-			}
+      }
 			this.setState({dataSource, selectedMonth: value })
 		})
 	}
