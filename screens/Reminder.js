@@ -9,6 +9,18 @@ import {getUser, getReminder, getCategory, updateReminder, insertReminder, remin
 import { format } from "date-fns";
 import { getLatestEmail, getLatestUserID } from '../libs/cache';
 
+const styles = {
+  floatingFab: {
+    position: 'absolute', 
+    width: 50, 
+    height: 50, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    right: 20, 
+    bottom: 20,
+    zIndex: 9
+  }
+};
 
 class ReminderList extends Component {
     state={
@@ -19,7 +31,8 @@ class ReminderList extends Component {
         reminder: '',
         selected: false,
         newCategory: '',
-        usernameID: ''
+        usernameID: '',
+        active: false
     }
 
 componentDidMount = () =>{
@@ -124,8 +137,28 @@ onChangeReminder =(value) => {
       const windowHeight = Dimensions.get('screen').height;
     return (
         <Container>
-          <Content>
-            
+          <View style={styles.floatingFab}>
+            <Fab
+              active={this.state.active}
+              direction="up"
+              style={{ backgroundColor: '#579e81' }}
+              position="bottomRight"
+              onPress={() => this.setState({ active: !this.state.active })}
+              // onPress={() => this.dialogComponent.show()}
+              >
+              <MaterialIcons name='add' />
+            <Button style={{ backgroundColor: '#34A34F' }}>
+              <Icon name="logo-whatsapp" />
+            </Button>
+            <Button style={{ backgroundColor: '#3B5998' }}>
+              <Icon name="logo-facebook" />
+            </Button>
+            <Button disabled style={{ backgroundColor: '#DD5144' }}>
+              <Icon name="mail" />
+            </Button>              
+            </Fab>
+          </View>        
+          <Content>            
               {
                 itemList && Object.keys(itemList).map((date) =>{
                   return(
@@ -154,15 +187,7 @@ onChangeReminder =(value) => {
                     </List>)
                 })
               }
-        <View style={{ flex: 1 }}>
-          <Fab
-            containerStyle={{ }}
-            style={{ backgroundColor: '#579e81' }}
-            position="bottomRight"
-            onPress={() => this.dialogComponent.show()}>
-            <MaterialIcons name='add' />
-          </Fab>
-        </View>
+
         <DialogComponent
           ref={(dialogComponent) => { this.dialogComponent = dialogComponent; }}
         >
