@@ -40,8 +40,7 @@ export default class App extends Component {
       dataSource,
       statistics:[],
       category:[],
-      year: 2020,
-      month: 4,
+      year: year[1],
       selectedMonth: new Date().getMonth()+1
     }
 
