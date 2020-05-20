@@ -4,10 +4,13 @@ import { Container, Header, Content, List, ListItem, Text, Button, Icon, Left, B
    Textarea, View,Fab  } from 'native-base';
 import DialogManager,{ DialogComponent } from 'react-native-dialog-component'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
-import {getUser, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
+import {deleteReminder, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
 import { getLatestEmail, getLatestUserID } from '../libs/cache';
+import {SwipeView} from 'react-native-swipe-view';
 
 const styles = {
   floatingFab: {
@@ -16,8 +19,8 @@ const styles = {
     height: 50, 
     alignItems: 'center', 
     justifyContent: 'center', 
-    right: 20, 
-    bottom: 20,
+    right: 5, 
+    bottom: 5,
     zIndex: 9
   }
 };
@@ -136,28 +139,7 @@ onChangeReminder =(value) => {
       const windowWidth = Dimensions.get('screen').width;
       const windowHeight = Dimensions.get('screen').height;
     return (
-        <Container>
-          <View style={styles.floatingFab}>
-            <Fab
-              active={this.state.active}
-              direction="up"
-              style={{ backgroundColor: '#579e81' }}
-              position="bottomRight"
-              onPress={() => this.setState({ active: !this.state.active })}
-              // onPress={() => this.dialogComponent.show()}
-              >
-              <MaterialIcons name='add' />
-            <Button style={{ backgroundColor: '#34A34F' }}>
-              <Icon name="logo-whatsapp" />
-            </Button>
-            <Button style={{ backgroundColor: '#3B5998' }}>
-              <Icon name="logo-facebook" />
-            </Button>
-            <Button disabled style={{ backgroundColor: '#DD5144' }}>
-              <Icon name="mail" />
-            </Button>              
-            </Fab>
-          </View>        
+        <Container>        
           <Content>            
               {
                 itemList && Object.keys(itemList).map((date) =>{
@@ -169,19 +151,21 @@ onChangeReminder =(value) => {
                       {
                       itemList[date].map((item,index)=>{
                           return (
-                            //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js
-                          <ListItem key = {index} style={{height:70}}>
-                              <Left>
-                                <View style={{flex:1, flexDirection:'column'}}>
-                                  <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
-                                  onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
-                                  <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryName(item.category.id)}</Text>
-                                </View>
-                              </Left>
-                              <Right>
-                              <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>
-                              </Right>
-                          </ListItem>
+                            <SwipeView changeOpacity removeViewOnSwipedOut onSwipedOut={()=>deleteReminder(item.id)} style={{borderWidth: 4}}>
+                            {/* //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js */}
+                              <ListItem key = {index} style={{height:70}}>
+                                  <Left>
+                                    <View style={{flex:1, flexDirection:'column'}}>
+                                      <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
+                                      onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
+                                      <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryName(item.category.id)}</Text>
+                                    </View>
+                                  </Left>
+                                  <Right>
+                                  <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>
+                                  </Right>
+                              </ListItem>
+                            </SwipeView>
                           )}
                       )}
                     </List>)
@@ -207,9 +191,6 @@ onChangeReminder =(value) => {
                 return <Picker.Item label={item.listCat} value={item.id} />
               })}
             </Picker>
-            <Button onPress={()=>this.dialogComponent2.show()} style={{width:60, backgroundColor:'gray'}}>
-              <Icon name='add-circle' />
-            </Button>
             
           </View>
           <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent.dismiss()} color="primary" />
@@ -228,10 +209,23 @@ onChangeReminder =(value) => {
               <DialogButton text = 'Save' onPress={this.handleSaveCategory} color="primary" />
             </DialogComponent>
           </Content>
-              {/* <Button onClick = {()=>this.setState({open:true})}>
-                <Icon name='add-circle-outline'></Icon>
-              </Button> */}
-
+          <View style={styles.floatingFab}>
+            <Fab
+              active={this.state.active}
+              direction="up"
+              style={{ backgroundColor: '#579e81' }}
+              position="bottomRight"
+              onPress={() => this.setState({ active: !this.state.active })}
+              >
+              <MaterialIcons name='add' />
+            <Button onPress={()=>this.dialogComponent2.show()} style={{ backgroundColor: '#8dc7d9' }} >
+              <SimpleLineIcons name="grid" size={20}/>
+            </Button>
+            <Button onPress={()=>this.dialogComponent.show()} style={{ backgroundColor: '#d9a18d' }} >
+              <MaterialCommunityIcons name="playlist-edit" size={25} />
+            </Button>              
+            </Fab>
+          </View>
         </Container>
 
         

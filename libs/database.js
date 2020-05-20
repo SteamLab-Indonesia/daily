@@ -97,6 +97,15 @@ export function getReminder(usernameID){
   })
 }
 
+export function deleteReminder(id){
+	return new Promise((resolve,reject)=>{
+		reminderCollection.doc("id").delete().then(
+			()=>{resolve('success')}
+		)
+		.catch((err) => reject(err));
+	})
+}
+
 export function getCategory(userID){
 	if(userID && typeof userID != 'object')
 		userID = usersCollection.doc(userID);
