@@ -10,7 +10,7 @@ import DialogButton from 'react-native-dialog-component/dist/components/DialogBu
 import {deleteReminder, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
 import { getLatestEmail, getLatestUserID } from '../libs/cache';
-import {SwipeView} from 'react-native-swipe-view';
+import GmailSwipe from '../components/GmailSwipe';
 
 const styles = {
   floatingFab: {
@@ -116,6 +116,13 @@ handleSaveCategory = () => {
   })
 }
 
+onDeleteReminder = (id,index,date) => {
+  deleteReminder(id)
+  let {itemList} = this.state
+  itemList[date].splice(index,1)
+  this.setState({itemList})
+}
+
 handleClose = () => {
   this.setState({open:false})
 }
@@ -151,7 +158,7 @@ onChangeReminder =(value) => {
                       {
                       itemList[date].map((item,index)=>{
                           return (
-                            <SwipeView changeOpacity removeViewOnSwipedOut onSwipedOut={()=>deleteReminder(item.id)} style={{borderWidth: 4}}>
+                            <GmailSwipe>
                             {/* //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js */}
                               <ListItem key = {index} style={{height:70}}>
                                   <Left>
@@ -165,7 +172,7 @@ onChangeReminder =(value) => {
                                   <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>
                                   </Right>
                               </ListItem>
-                            </SwipeView>
+                            </GmailSwipe>
                           )}
                       )}
                     </List>)
@@ -209,11 +216,10 @@ onChangeReminder =(value) => {
               <DialogButton text = 'Save' onPress={this.handleSaveCategory} color="primary" />
             </DialogComponent>
           </Content>
-          <View style={styles.floatingFab}>
             <Fab
               active={this.state.active}
               direction="up"
-              style={{ backgroundColor: '#579e81' }}
+              style={[{backgroundColor: '#579e81'}, styles.floatingFab]}
               position="bottomRight"
               onPress={() => this.setState({ active: !this.state.active })}
               >
@@ -225,7 +231,6 @@ onChangeReminder =(value) => {
               <MaterialCommunityIcons name="playlist-edit" size={25} />
             </Button>              
             </Fab>
-          </View>
         </Container>
 
         

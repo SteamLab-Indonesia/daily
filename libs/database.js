@@ -99,7 +99,7 @@ export function getReminder(usernameID){
 
 export function deleteReminder(id){
 	return new Promise((resolve,reject)=>{
-		reminderCollection.doc("id").delete().then(
+		reminderCollection.doc(id).delete().then(
 			()=>{resolve('success')}
 		)
 		.catch((err) => reject(err));
