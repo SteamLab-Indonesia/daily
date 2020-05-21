@@ -10,6 +10,8 @@ import {
   Dimensions,
 } from 'react-native';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {
   Header,
   LearnMoreLinks,
@@ -91,6 +93,19 @@ class TimerScreen extends Component{
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
         <Button style={styles.buttonText} title={this.state.buttonText} 
         onPress={()=>this.props.navigation.navigate('Countdown', {itemDate,itemName, itemCategory,timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></Button>
+        
+        <View style={styles.buttons}>
+          <Button style={{width: 12, height:12}}>
+            <MaterialCommunityIcons name="check" size={20}/>
+          </Button>
+          <Button style={{width: 12, height:12}}> 
+            <MaterialCommunityIcons name="square-edit-outline" size={25} />
+          </Button>
+          <Button style={{width: 12, height:12}}>
+            <MaterialCommunityIcons name="delete-outline" size={25} />
+          </Button>
+        </View>
+
       </View>
     )
   }
@@ -143,6 +158,15 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
+  },
+  buttons: {
+    position: 'absolute',
+    flexDirection:'row',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    right: 5, 
+    bottom: 5,
+    zIndex: 9
   },
 });
 

@@ -185,7 +185,7 @@ getCategoryProps = (categoryId,key) => {
                                   </Left>
                                   <Right>
                                   {/* <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/> */}
-                                  <Button style={{backgroundColor:this.getCategoryProps(item.category.id,'color')}}></Button>
+                                  <Button disabled style={{width: 12, height:12, borderRadius:6, backgroundColor:this.getCategoryProps(item.category.id,'color')}}></Button>
                                   </Right>
                               </ListItem>
                             </GmailSwipe>
@@ -211,7 +211,11 @@ getCategoryProps = (categoryId,key) => {
               onValueChange = {(event) => this.onChangeCategoryPress(event)}
             >
               {category.map((item)=>{
-                return <Picker.Item label={item.listCat} value={item.id} />
+                return (
+                  <Picker.Item label={item.listCat} value={item.id}>
+                    <Button disabled style={{width: 12, height:12, borderRadius:6, backgroundColor:item.color}}></Button>
+                  </Picker.Item>
+                )
               })}
             </Picker>
             
