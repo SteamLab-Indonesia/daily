@@ -45,7 +45,6 @@ componentDidMount = () =>{
     if (data)
     {
       this.setState({itemList:data})
-      console.log(data)
     }
   })
 	getCategory(userId).then((data)=>{
@@ -69,7 +68,6 @@ onChangeCategoryPress = ((value) =>{ //simpan di state
   let selectedCat = this.state.selectedCat;
   selectedCat=value;
   this.setState({selectedCat});
-  console.log(this.state.selectedCat)
 })
 
 // selectedPress = (index) => {
@@ -116,6 +114,14 @@ handleSaveCategory = () => {
   })
 }
 
+onCompleteReminder = (key,index) => {
+  let {itemList} =this.state;
+  itemList[key][index].complete = !itemList[key][index].complete;
+  // Only update complete field
+  updateReminder(itemList[key][index].id, {complete: itemList[key][index].complete });
+  this.setState({itemList});
+}
+
 onDeleteReminder = (id,index,date) => {
   deleteReminder(id)
   let {itemList} = this.state
@@ -134,7 +140,6 @@ onChangeReminder =(value) => {
   getCategoryName = (categoryId) => {
     let {category} = this.state;
     let foundCategory = category.filter((item) => item.id == categoryId);
-    console.log(foundCategory);
     if (foundCategory.length > 0)
       return foundCategory[0].listCat;
     else
@@ -158,7 +163,10 @@ onChangeReminder =(value) => {
                       {
                       itemList[date].map((item,index)=>{
                           return (
-                            <GmailSwipe>
+                            <GmailSwipe 
+                              onRightSwipeOut={() => this.onDeleteReminder(item.id, index, date)} 
+                              onLeftSwipeOut={() => this.onCompleteReminder(date, index)}
+                            >
                             {/* //this is class not function unlike Login, makanya perlu this.props, dapat dari navigation container dari App.js */}
                               <ListItem key = {index} style={{height:70}}>
                                   <Left>

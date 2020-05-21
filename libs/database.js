@@ -70,6 +70,7 @@ export function getReminder(usernameID){
 		reminderCollection
 		.where('user', '==', usersCollection.doc(usernameID))
 		.orderBy('date', 'desc')
+		.orderBy('complete', 'asc')
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
