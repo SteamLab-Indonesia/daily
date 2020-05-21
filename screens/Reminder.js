@@ -25,6 +25,9 @@ const styles = {
   }
 };
 
+let color = ['#FFCC7C','#72C2E2','#AEA0E8','#79D2BB','#FFD2C5','#FF979A','#FBC396','#B8E1DD','#568EA6','#BCD8C1','#F9812A','#708238']
+color.sort()
+
 class ReminderList extends Component {
     state={
         itemList:{}, // id,date,task,complete
@@ -35,7 +38,8 @@ class ReminderList extends Component {
         selected: false,
         newCategory: '',
         usernameID: '',
-        active: false
+        active: false,
+        color: ''
     }
 
 componentDidMount = () =>{
@@ -106,10 +110,10 @@ handleSave = () => {
 // }
 
 handleSaveCategory = () => {
-  let {newCategory, category} = this.state;
+  let {newCategory, category, color} = this.state;
   this.dialogComponent2.dismiss();
-  insertCategory({listCat: newCategory, color: 'black'}).then((id)=>{
-    category.push({id:id, listCat: newCategory, color: 'black'})
+  insertCategory({listCat: newCategory, color, user:getLatestUserID()}).then((id)=>{
+    category.push({id:id, listCat: newCategory, color})
     this.setState({category}) //tampilan di hp
   })
 }
@@ -137,11 +141,14 @@ onChangeReminder =(value) => {
   this.setState({reminder: value});
 }
 
-  getCategoryName = (categoryId) => {
+getCategoryProps = (categoryId,key) => {
     let {category} = this.state;
     let foundCategory = category.filter((item) => item.id == categoryId);
     if (foundCategory.length > 0)
-      return foundCategory[0].listCat;
+    {
+      console.log(foundCategory[0]['color'])
+      return foundCategory[0][key];
+    }
     else
       return '';
   }
@@ -173,11 +180,12 @@ onChangeReminder =(value) => {
                                     <View style={{flex:1, flexDirection:'column'}}>
                                       <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
                                       onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
-                                      <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryName(item.category.id)}</Text>
+                                      <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryProps(item.category.id,'listCat')}</Text>
                                     </View>
                                   </Left>
                                   <Right>
-                                  <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/>
+                                  {/* <CheckBox checked={item.complete} onPress={()=>this.checkboxPress(date,index)}/> */}
+                                  <Button style={{backgroundColor:this.getCategoryProps(item.category.id,'color')}}></Button>
                                   </Right>
                               </ListItem>
                             </GmailSwipe>
@@ -216,8 +224,15 @@ onChangeReminder =(value) => {
             >
               <View>
                 <Text>
-                  Add New Category
+                  New Category
                 </Text>
+                <View style={{flexDirection:'row',justifyContent:'space-around',flexWrap:'wrap', marginTop:10,marginBottom:10}}>
+                {
+                  color.map((item)=>{
+                    return <Button style={[item==this.state.color ? {borderColor: 'gray', borderWidth:1.5} : null, { height:40, width:40, borderRadius:20, backgroundColor:item, marginLeft:20, marginBottom:10}]} onPress={()=>this.setState({color:item})}/>
+                  })
+                }
+                </View>
                 <Textarea rowSpan={3} bordered placeholder="Input New Category" onChangeText = {(text) => this.onNewCategory(text)}/>
               </View>
               <DialogButton text = 'Cancel' onPress={()=>this.dialogComponent2.dismiss()} color="primary" />

@@ -293,6 +293,11 @@ export function insertCategory(newData){
 	return new Promise((resolve,reject)=>{
 		if (newData)
 		{
+			if (newData.user)
+			{
+				// Convert to document reference (category collection)
+				newData.user = usersCollection.doc(newData.user);
+			}
 			categoryCollection.add(newData)
 			.then((snapshot) => {
 				console.log(snapshot);
