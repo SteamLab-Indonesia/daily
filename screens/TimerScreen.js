@@ -5,11 +5,13 @@ import {
   ScrollView,
   View, //div
   Text, //headings h1 h2
+  Button as RNButton,
   StatusBar, //time, date
-  Button,
   Dimensions,
+  TextInput
 } from 'react-native';
 
+import {Button} from 'native-base' 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
@@ -19,6 +21,8 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import {updateReminder, deleteReminder} from '../libs/database'
 
 import {WheelPicker} from 'react-native-wheel-picker-android'
 
@@ -34,8 +38,11 @@ class TimerScreen extends Component{
     timer: null,
     totalSeconds: 300,
     hourSelected: 0,
-    minuteSelected: 0
+    minuteSelected: 0,
+    editMode: false,
+    taskName: this.props.route.params.itemName
   }
+
 
   onChangeMinute = (selectedItem) => {
     this.setState({minuteSelected:selectedItem})
@@ -43,6 +50,12 @@ class TimerScreen extends Component{
 
   onChangeHour = (selectedItem) => {
     this.setState({hourSelected:selectedItem})
+  }
+
+  updateTask = (itemID) => {
+    updateReminder(itemID, {task: this.state.taskName})
+    this.setState({editMode:false})
+    console.log('update task')
   }
 
   reduceTimer =()=>{
@@ -73,10 +86,12 @@ class TimerScreen extends Component{
   
   render(){
     let strHMS = this.convertHMS()
-    const {itemName,itemCategory,itemDate} = this.props.route.params //get parameter value from reminder.js
+    const {itemName,itemCategory,itemDate, itemID} = this.props.route.params //get parameter value from reminder.js
     return(
       <View style={{flex:1, flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
-        <Text style={{fontSize:20}}>{itemName}</Text>
+        {this.state.editMode? <TextInput value={this.state.taskName} 
+        onChangeText={(text)=> this.setState({taskName:text})}
+        onEndEditing={()=>this.updateTask(itemID)}/> : <Text style={{fontSize:20}}>{this.state.taskName}</Text>}
         <View style = {{height:'20%', flexDirection:'row'}}>
           <WheelPicker
           data={hourOptions}
@@ -91,18 +106,21 @@ class TimerScreen extends Component{
         </View>
         
         {/* <Text style={{fontSize:32}}>{strHMS}</Text> */}
-        <Button style={styles.buttonText} title={this.state.buttonText} 
-        onPress={()=>this.props.navigation.navigate('Countdown', {itemDate,itemName, itemCategory,timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></Button>
+        <RNButton style={styles.buttonText} title={this.state.buttonText} 
+        onPress={()=>this.props.navigation.navigate('Countdown', {itemDate,itemName, itemCategory,timerHour:this.state.hourSelected, timerMinute:this.state.minuteSelected})}></RNButton>
         
         <View style={styles.buttons}>
-          <Button style={{width: 12, height:12}}>
+          <Button vertical onPress={()=>updateReminder(itemID,{complete:true})} style={{width: '33.333%', height:50, backgroundColor:'transparent', borderColor:'lightgray', borderWidth:0.2}}>
             <MaterialCommunityIcons name="check" size={20}/>
+            <Text>Complete</Text>
           </Button>
-          <Button style={{width: 12, height:12}}> 
+          <Button vertical onPress={()=>this.setState({editMode:true, taskName:itemName})} style={{width: '33.333%', height:50, backgroundColor:'transparent', borderColor:'lightgray', borderWidth:0.2}}> 
             <MaterialCommunityIcons name="square-edit-outline" size={25} />
+            <Text>Edit</Text>
           </Button>
-          <Button style={{width: 12, height:12}}>
+          <Button vertical onPress={()=>deleteReminder(id)} style={{width: '33.333%', height:50, backgroundColor:'transparent', borderColor:'lightgray', borderWidth:0.2}}>
             <MaterialCommunityIcons name="delete-outline" size={25} />
+            <Text>Delete</Text>
           </Button>
         </View>
 
@@ -114,15 +132,15 @@ class TimerScreen extends Component{
 const screen = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    buttonText:{
-        borderWidth: 10,
-        borderColor: '#B9AAFF',
-        width: screen.width/2,
-        height: screen.width/2,
-        borderRadius: screen.width/2,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
+  buttonText:{
+      borderWidth: 10,
+      borderColor: '#B9AAFF',
+      width: screen.width/2,
+      height: screen.width/2,
+      borderRadius: screen.width/2,
+      alignItems: 'center',
+      justifyContent: 'center'
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },
@@ -163,7 +181,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection:'row',
     alignItems: 'center', 
-    justifyContent: 'center', 
+    justifyContent: 'center',
     right: 5, 
     bottom: 5,
     zIndex: 9

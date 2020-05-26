@@ -7,6 +7,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 export default class GmailStyleSwipeableRow extends Component {
   renderLeftActions = (progress, dragX) => {
@@ -17,7 +18,7 @@ export default class GmailStyleSwipeableRow extends Component {
     });
     return (
       <RectButton style={styles.leftAction} onPress={this.close}>
-        <Text style={{color:'white', fontSize:16}}>Complete</Text>
+        <AnimatedText style={[{color:'white'}, {fontSize:16}, { transform: [{ scale }] }]}>Complete</AnimatedText>
         <AnimatedIcon
           name="checkbox-marked-circle-outline"
           size={30}
@@ -35,7 +36,7 @@ export default class GmailStyleSwipeableRow extends Component {
     });
     return (
       <RectButton style={styles.rightAction} onPress={this.close}>
-        <Text style={{color:'white', fontSize:16}}>Delete</Text>
+        <AnimatedText style={[{color:'white'}, {fontSize:16}, { transform: [{ scale }] }]}>Delete</AnimatedText>
         <AnimatedIcon
           name="delete-forever-outline"
           size={30}

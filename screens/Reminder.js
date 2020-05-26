@@ -179,7 +179,7 @@ getCategoryProps = (categoryId,key) => {
                                   <Left>
                                     <View style={{flex:1, flexDirection:'column'}}>
                                       <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
-                                      onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category})}>{item.name}</Text> 
+                                      onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category, itemID: item.id})}>{item.name}</Text> 
                                       <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryProps(item.category.id,'listCat')}</Text>
                                     </View>
                                   </Left>
