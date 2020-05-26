@@ -84,14 +84,28 @@ class TimerScreen extends Component{
     return output_str
   }
   
+  toggleEditMode = () => {
+    let {editMode, taskName} = this.state;
+    this.setState({editMode: !editMode, taskName});
+  }
   render(){
     let strHMS = this.convertHMS()
-    const {itemName,itemCategory,itemDate, itemID} = this.props.route.params //get parameter value from reminder.js
+    const {itemName,itemCategory,itemDate, itemID} = this.props.route.params //get parameter value from reminder.js    
     return(
       <View style={{flex:1, flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
-        {this.state.editMode? <TextInput value={this.state.taskName} 
-        onChangeText={(text)=> this.setState({taskName:text})}
-        onEndEditing={()=>this.updateTask(itemID)}/> : <Text style={{fontSize:20}}>{this.state.taskName}</Text>}
+        {this.state.editMode? 
+          <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignItems:'center'}}>
+            <TextInput 
+              style={{fontSize: 20, width: 150}}
+              value={this.state.taskName} 
+              onChangeText={(text)=> this.setState({taskName:text})}
+              onBlur={()=>this.updateTask(itemID)}
+              onEndEditing={()=>this.updateTask(itemID)}
+              ref={input => this.taskRef = input}  
+              autoFocus={true}
+            />
+            <RNButton title="Save" onPress={()=>this.updateTask(itemID)}/>
+          </View> : <Text style={{fontSize:20}}>{this.state.taskName}</Text>}
         <View style = {{height:'20%', flexDirection:'row'}}>
           <WheelPicker
           data={hourOptions}
@@ -114,7 +128,7 @@ class TimerScreen extends Component{
             <MaterialCommunityIcons name="check" size={20}/>
             <Text>Complete</Text>
           </Button>
-          <Button vertical onPress={()=>this.setState({editMode:true, taskName:itemName})} style={{width: '33.333%', height:50, backgroundColor:'transparent', borderColor:'lightgray', borderWidth:0.2}}> 
+          <Button vertical onPress={()=> this.toggleEditMode()} style={{width: '33.333%', height:50, backgroundColor:'transparent', borderColor:'lightgray', borderWidth:0.2}}> 
             <MaterialCommunityIcons name="square-edit-outline" size={25} />
             <Text>Edit</Text>
           </Button>
