@@ -27,7 +27,7 @@ const styles = {
   }
 };
 
-let color = ['#FFCC7C','#72C2E2','#AEA0E8','#79D2BB','#FFD2C5','#FF979A','#FBC396','#B8E1DD','#568EA6','#BCD8C1','#F9812A','#708238']
+let color = ['#FFCC7C','#72C2E2','#AEA0E8','#79D2BB','#FFD2C5','#FF979A','#FBC396','#B8E1DD','#568EA6','#C0C0C0','#F9812A','#74B72E']
 color.sort()
 
 class ReminderList extends Component {
@@ -56,10 +56,10 @@ componentDidMount = () =>{
 	getCategory(userId).then((data)=>{
 		this.setState({category:data})
   });
-  onReminderChange(userId, this.onReminderUpdate);
+  onReminderChange(userId, this.onReminderUpdate); //take data from database and give it to a function, onReminderUpdate no brackets
 }
 
-onReminderUpdate = (data) => {
+onReminderUpdate = (data) => { //callback function, ksh link gitu, like ksh data to this function
   if (data)
   {
     this.setState({itemList:data});

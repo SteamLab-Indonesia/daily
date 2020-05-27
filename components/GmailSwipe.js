@@ -36,6 +36,7 @@ export default class GmailStyleSwipeableRow extends Component {
   }
 
   rightSwipeOut = () => {
+    this.close();
     if (this.props.onRightSwipeOut)
       this.props.onRightSwipeOut();
   }
