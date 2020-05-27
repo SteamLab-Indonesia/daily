@@ -65,12 +65,37 @@ export function reminderMM(time) {
     return format(date, "MMMM");
 }
 
+function sortKeys(obj_1) { 
+	var key = Object.keys(obj_1) 
+	.sort(function order(key1, key2) { 
+		if (key1 < key2) return 1; 
+		else if (key1 > key2) return -1; 
+		else return 0; 
+	});  
+	  
+	// Taking the object in 'temp' object 
+	// and deleting the original object. 
+	var temp = {}; 
+	  
+	for (var i = 0; i < key.length; i++) { 
+		temp[key[i]] = obj_1[key[i]]; 
+		delete obj_1[key[i]]; 
+	}  
+
+	// Copying the object from 'temp' to  
+	// 'original object'. 
+	for (var i = 0; i < key.length; i++) { 
+		obj_1[key[i]] = temp[key[i]]; 
+	}  
+	return obj_1; 
+} 
+
 export function getReminder(usernameID){
 	return new Promise((resolve,reject)=>{
 		reminderCollection
 		.where('user', '==', usersCollection.doc(usernameID))
 		.orderBy('complete', 'asc')
-		.orderBy('date', 'desc')		
+		.orderBy('date', 'desc')
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
@@ -91,6 +116,7 @@ export function getReminder(usernameID){
                         data[timeToString(object.date.toDate())] = []; //initialise
                     data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
 				}
+				data = sortKeys(data);
 				resolve(data);
 			}
         })
@@ -340,7 +366,7 @@ export function onReminderChange(usernameID, callbackFunction)
 					data[timeToString(object.date.toDate())] = []; //initialise
 				data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
 			}
-	
+			data = sortKeys(data);
 			if (callbackFunction)
 				callbackFunction(data);
 		}
