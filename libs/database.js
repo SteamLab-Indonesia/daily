@@ -311,3 +311,33 @@ export function insertCategory(newData){
 		}
 	})
 }
+
+
+export function onReminderChange(usernameID, callbackFunction)
+{
+	const db = firebase.firestore();
+	db.collection('reminderCollection')
+	.where('user', '==', userCollection.doc(usernameID))
+	.orderBy('date', 'desc')
+	.orderBy('complete', 'asc')
+	.onSnapshot((snapshot) => {
+		let data = {};
+		for (let i=0;i< snapshot.docs.length; ++i){
+			let object = {
+				id: snapshot.docs[i].id,
+				date: snapshot.docs[i].data().date,
+				name: snapshot.docs[i].data().task,
+				complete: snapshot.docs[i].data().complete,
+				category: snapshot.docs[i].data().category,
+				user: snapshot.docs[i].data().user
+			};
+			if (! data[timeToString(object.date.toDate())])
+				data[timeToString(object.date.toDate())] = []; //initialise
+			data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
+		}
+
+		if (callbackFunction)
+			callbackFunction(data);
+
+	})
+}

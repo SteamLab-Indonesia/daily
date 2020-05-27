@@ -58,23 +58,6 @@ class TimerScreen extends Component{
     console.log('update task')
   }
 
-  reduceTimer =()=>{
-    let totalSeconds = this.state.totalSeconds;
-    totalSeconds--
-    this.setState({totalSeconds})
-  }
-
-  handlePress =()=>{
-    if (this.state.timer == null){
-      let timer = setInterval(() => this.reduceTimer(), 1000);
-      this.setState({timer, totalSeconds: 300, buttonText : 'STOP'})
-    }
-    else{
-      clearInterval(this.state.timer);
-      this.setState({timer:null, buttonText : 'START'})
-    }
-  }
-
   convertHMS = () => {
     let totalSeconds = this.state.totalSeconds;
     let hour = Math.floor(totalSeconds/3600);
