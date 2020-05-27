@@ -17,7 +17,7 @@ export default class GmailStyleSwipeableRow extends Component {
       extrapolate: 'clamp',
     });
     return (
-      <RectButton style={styles.leftAction} onPress={this.close}>
+      <RectButton style={styles.leftAction} onPress={this.leftSwipeOut}>
         <AnimatedText style={[{color:'white'}, {fontSize:16}, { transform: [{ scale }] }]}>Complete</AnimatedText>
         <AnimatedIcon
           name="checkbox-marked-circle-outline"
@@ -28,6 +28,18 @@ export default class GmailStyleSwipeableRow extends Component {
       </RectButton>
     );
   };
+
+  leftSwipeOut = () => {
+    if (this.props.onLeftSwipeOut)
+      this.props.onLeftSwipeOut();
+    this.close();
+  }
+
+  rightSwipeOut = () => {
+    if (this.props.onRightSwipeOut)
+      this.props.onRightSwipeOut();
+  }
+
   renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-80, 0],
@@ -35,7 +47,7 @@ export default class GmailStyleSwipeableRow extends Component {
       extrapolate: 'clamp',
     });
     return (
-      <RectButton style={styles.rightAction} onPress={this.close}>
+      <RectButton style={styles.rightAction} onPress={this.rightSwipeOut}>
         <AnimatedText style={[{color:'white'}, {fontSize:16}, { transform: [{ scale }] }]}>Delete</AnimatedText>
         <AnimatedIcon
           name="delete-forever-outline"
@@ -46,6 +58,7 @@ export default class GmailStyleSwipeableRow extends Component {
       </RectButton>
     );
   };
+
   updateRef = ref => {
     this._swipeableRow = ref;
   };
@@ -61,6 +74,8 @@ export default class GmailStyleSwipeableRow extends Component {
         leftThreshold={80}
         rightThreshold={40}
         childrenContainerStyle={{flex:1}}
+        onSwipeableLeftOpen={this.leftSwipeOut}
+        onSwipeableRightOpen={this.rightSwipeOut}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}>
         {children}
