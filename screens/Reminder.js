@@ -7,7 +7,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import DialogButton from 'react-native-dialog-component/dist/components/DialogButton';
-import {deleteReminder, getReminder, getCategory, updateReminder, insertReminder, reminderDate, timeToString, insertCategory} from  '../libs/database';
+import {deleteReminder, onReminderChange, getReminder, 
+        getCategory, updateReminder, insertReminder, 
+        reminderDate, timeToString, insertCategory} from  '../libs/database';
 import { format } from "date-fns";
 import { getLatestEmail, getLatestUserID } from '../libs/cache';
 import GmailSwipe from '../components/GmailSwipe';
@@ -53,7 +55,15 @@ componentDidMount = () =>{
   })
 	getCategory(userId).then((data)=>{
 		this.setState({category:data})
-	})
+  });
+  onReminderChange(userId, this.onReminderUpdate);
+}
+
+onReminderUpdate = (data) => {
+  if (data)
+  {
+    this.setState({itemList:data});
+  }
 }
 
 checkboxPress = (key,index) => {
@@ -96,18 +106,7 @@ handleSave = () => {
     this.setState({itemList}) //tampilan di hp
   })
 }
-//   if (itemList['date'][index] != '')
-//     {
-//       updateReminder(itemList['date'][index].id, itemList['date'][index])
-//     }
-//     // else
-//     // {
-//     //   insertReminder(itemList['date'][index]).then((id) => {
-//     //     collate[index].id = id;
-//     //     this.setState({collate});
-//     //   })
-//     // }    
-// }
+
 
 handleSaveCategory = () => {
   let {newCategory, category, color} = this.state;
@@ -146,7 +145,6 @@ getCategoryProps = (categoryId,key) => {
     let foundCategory = category.filter((item) => item.id == categoryId);
     if (foundCategory.length > 0)
     {
-      console.log(foundCategory[0]['color'])
       return foundCategory[0][key];
     }
     else
@@ -178,8 +176,10 @@ getCategoryProps = (categoryId,key) => {
                               <ListItem key = {index} style={{height:70}}>
                                   <Left>
                                     <View style={{flex:1, flexDirection:'column'}}>
-                                      <Text style={item.complete ? {textDecorationLine: 'line-through'} : null} style={{ color: '#45535e', fontSize : 18, fontFamily: 'Roboto'}}
-                                      onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category, itemID: item.id})}>{item.name}</Text> 
+                                      <Text style={[item.complete ? {textDecorationLine: 'line-through'} : null, { color: '#45535e', fontSize : 18, fontFamily: 'Roboto'} ]}
+                                      onPress={()=>this.props.navigation.navigate('Timer', {itemDate: item.date, itemName:item.name, itemCategory:item.category, itemID: item.id})}>
+                                        {item.name.substring(0, 25) + (item.name.length > 25 ? '...': '') }
+                                      </Text> 
                                       <Text style={{ color: 'grey', fontSize:14, fontFamily: 'Roboto'}}>{this.getCategoryProps(item.category.id,'listCat')}</Text>
                                     </View>
                                   </Left>
