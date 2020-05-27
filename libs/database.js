@@ -69,8 +69,8 @@ export function getReminder(usernameID){
 	return new Promise((resolve,reject)=>{
 		reminderCollection
 		.where('user', '==', usersCollection.doc(usernameID))
-		.orderBy('date', 'desc')
 		.orderBy('complete', 'asc')
+		.orderBy('date', 'desc')		
 		.get()
 		.then((snapshot) => {
 			if(snapshot.empty){
@@ -315,29 +315,34 @@ export function insertCategory(newData){
 
 export function onReminderChange(usernameID, callbackFunction)
 {
-	const db = firebase.firestore();
-	db.collection('reminderCollection')
-	.where('user', '==', userCollection.doc(usernameID))
-	.orderBy('date', 'desc')
+	reminderCollection
+	.where('user', '==', usersCollection.doc(usernameID))
 	.orderBy('complete', 'asc')
+	.orderBy('date', 'desc')	
 	.onSnapshot((snapshot) => {
-		let data = {};
-		for (let i=0;i< snapshot.docs.length; ++i){
-			let object = {
-				id: snapshot.docs[i].id,
-				date: snapshot.docs[i].data().date,
-				name: snapshot.docs[i].data().task,
-				complete: snapshot.docs[i].data().complete,
-				category: snapshot.docs[i].data().category,
-				user: snapshot.docs[i].data().user
-			};
-			if (! data[timeToString(object.date.toDate())])
-				data[timeToString(object.date.toDate())] = []; //initialise
-			data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
+
+		if(snapshot.empty){
+			resolve(null);
 		}
-
-		if (callbackFunction)
-			callbackFunction(data);
-
+		else
+		{
+			let data = {};
+			for (let i=0;i< snapshot.docs.length; ++i){
+				let object = {
+					id: snapshot.docs[i].id,
+					date: snapshot.docs[i].data().date,
+					name: snapshot.docs[i].data().task,
+					complete: snapshot.docs[i].data().complete,
+					category: snapshot.docs[i].data().category,
+					user: snapshot.docs[i].data().user
+				};
+				if (! data[timeToString(object.date.toDate())])
+					data[timeToString(object.date.toDate())] = []; //initialise
+				data[timeToString(object.date.toDate())].push(object); //array, dlm array multiple obj
+			}
+	
+			if (callbackFunction)
+				callbackFunction(data);
+		}
 	})
 }
