@@ -27,7 +27,7 @@
     "fusioncharts": "^3.15.1-sr.1",
     "native-base": "^2.13.12",
     "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react-native": "0.62.3",
     "react-native-calendars": "^1.265.0",
     "react-native-chart": "^1.0.8-beta",
     "react-native-countdown-circle-timer": "^2.1.0",
